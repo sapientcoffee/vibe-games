@@ -17,11 +17,11 @@ if [ -f "$SCRIPTS_DIR/sync.sh" ]; then
     "$SCRIPTS_DIR/sync.sh"
 fi
 
-# 1. Initialize or retrieve the Main Orchestrator pane ID
-MAIN_PANE=$(tmux show-option -gv @main-pane-id 2>/dev/null)
+# 1. Initialize or retrieve the Main Orchestrator pane ID for THIS WINDOW (-w)
+MAIN_PANE=$(tmux show-option -wv @main-pane-id 2>/dev/null)
 if [ -z "$MAIN_PANE" ] || ! tmux display-message -p -t "$MAIN_PANE" "#{pane_id}" >/dev/null 2>&1; then
     MAIN_PANE="$TMUX_PANE"
-    tmux set-option -g @main-pane-id "$MAIN_PANE"
+    tmux set-option -w @main-pane-id "$MAIN_PANE"
 fi
 
 # 2. Logic for Servers (Bottom, full-width, small height)
@@ -29,27 +29,32 @@ shopt -s nocasematch
 TYPE="other"
 if [[ "$COMMAND" =~ (server|dev|start|watch|bridge|uvicorn|fastapi|flask|node|npm|python|localhost) ]]; then
     TYPE="server"
+    # Target the MAIN_PANE for the split to stay in the same window
     PANE_ID=$(tmux split-window -v -f -l 4 -P -F "#{pane_id}" -t "$MAIN_PANE")
 
 # 3. Logic for Gemini Sessions (Right Column, Stacked)
 elif [[ "$COMMAND" =~ gemini ]]; then
     TYPE="gemini"
-    LAST_GEMINI=$(tmux show-option -gv @last-gemini-pane-id 2>/dev/null)
+    LAST_GEMINI=$(tmux show-option -wv @last-gemini-pane-id 2>/dev/null)
     
+    # Check if the last gemini pane still exists
     if [ -n "$LAST_GEMINI" ] && ! tmux display-message -p -t "$LAST_GEMINI" "#{pane_id}" >/dev/null 2>&1; then
         LAST_GEMINI=""
     fi
 
     if [ -z "$LAST_GEMINI" ]; then
+        # First gemini session: split vertically (right) from main pane
         PANE_ID=$(tmux split-window -h -P -F "#{pane_id}" -t "$MAIN_PANE")
     else
+        # Subsequent sessions: split horizontally (down) from the last gemini pane
         PANE_ID=$(tmux split-window -v -P -F "#{pane_id}" -t "$LAST_GEMINI")
     fi
-    tmux set-option -g @last-gemini-pane-id "$PANE_ID"
+    # Update the tracker for THIS WINDOW (-w)
+    tmux set-option -w @last-gemini-pane-id "$PANE_ID"
 
 # 4. Default fallback
 else
-    PANE_ID=$(tmux split-window -h -P -F "#{pane_id}")
+    PANE_ID=$(tmux split-window -h -P -F "#{pane_id}" -t "$MAIN_PANE")
 fi
 shopt -u nocasematch
 
