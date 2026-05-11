@@ -31,8 +31,16 @@ Generates presumptive vertical slices (tracer bullets) to begin immediate implem
 
 ## Installation
 
+The easiest way to install this extension is directly via the Gemini CLI:
+
+```bash
+gemini extensions install sapientcoffee/vibe-games
+```
+
+Alternatively, for local development:
+
 1. Clone this repository.
-2. Link the extension to your Gemini CLI:
+2. Link it:
    ```bash
    gemini extensions link /path/to/vibe-games
    ```
