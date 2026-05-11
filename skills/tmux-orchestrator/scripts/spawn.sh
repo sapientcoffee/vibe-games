@@ -8,13 +8,58 @@ if [ -z "$TMUX" ]; then
     exit 1
 fi
 
-# Spawn the pane and capture its ID
-PANE_ID=$(tmux split-window -h -P -F "#{pane_id}")
+COMMAND="$1"
+STATE_FILE=".tmux_panes"
+SCRIPTS_DIR="/home/robedwards/.gemini/extensions/vibe-games-extension/skills/tmux-orchestrator/scripts"
 
-# If a command was provided, send it to the new pane
-if [ -n "$1" ]; then
-    tmux send-keys -t "$PANE_ID" "$1" C-m
+# 0. Sync state file with reality
+if [ -f "$SCRIPTS_DIR/sync.sh" ]; then
+    "$SCRIPTS_DIR/sync.sh"
 fi
 
-# Output the PANE_ID to stdout for the caller
+# 1. Initialize or retrieve the Main Orchestrator pane ID
+MAIN_PANE=$(tmux show-option -gv @main-pane-id 2>/dev/null)
+if [ -z "$MAIN_PANE" ] || ! tmux display-message -p -t "$MAIN_PANE" "#{pane_id}" >/dev/null 2>&1; then
+    MAIN_PANE="$TMUX_PANE"
+    tmux set-option -g @main-pane-id "$MAIN_PANE"
+fi
+
+# 2. Logic for Servers (Bottom, full-width, small height)
+shopt -s nocasematch
+TYPE="other"
+if [[ "$COMMAND" =~ (server|dev|start|watch|bridge|uvicorn|fastapi|flask|node|npm|python|localhost) ]]; then
+    TYPE="server"
+    PANE_ID=$(tmux split-window -v -f -l 4 -P -F "#{pane_id}" -t "$MAIN_PANE")
+
+# 3. Logic for Gemini Sessions (Right Column, Stacked)
+elif [[ "$COMMAND" =~ gemini ]]; then
+    TYPE="gemini"
+    LAST_GEMINI=$(tmux show-option -gv @last-gemini-pane-id 2>/dev/null)
+    
+    if [ -n "$LAST_GEMINI" ] && ! tmux display-message -p -t "$LAST_GEMINI" "#{pane_id}" >/dev/null 2>&1; then
+        LAST_GEMINI=""
+    fi
+
+    if [ -z "$LAST_GEMINI" ]; then
+        PANE_ID=$(tmux split-window -h -P -F "#{pane_id}" -t "$MAIN_PANE")
+    else
+        PANE_ID=$(tmux split-window -v -P -F "#{pane_id}" -t "$LAST_GEMINI")
+    fi
+    tmux set-option -g @last-gemini-pane-id "$PANE_ID"
+
+# 4. Default fallback
+else
+    PANE_ID=$(tmux split-window -h -P -F "#{pane_id}")
+fi
+shopt -u nocasematch
+
+# 5. Record state
+echo "$(date +'%Y-%m-%dT%H:%M:%S') | $PANE_ID | $TYPE | $COMMAND" >> "$STATE_FILE"
+
+# Send the command if provided
+if [ -n "$COMMAND" ]; then
+    tmux send-keys -t "$PANE_ID" "$COMMAND" C-m
+fi
+
+# Output the PANE_ID to stdout
 echo "$PANE_ID"

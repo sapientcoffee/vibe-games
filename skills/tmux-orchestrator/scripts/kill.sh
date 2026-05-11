@@ -9,6 +9,13 @@ if [ -z "$1" ]; then
 fi
 
 PANE_ID="$1"
+STATE_FILE=".tmux_panes"
+SCRIPTS_DIR="/home/robedwards/.gemini/extensions/vibe-games-extension/skills/tmux-orchestrator/scripts"
 
-# Kill the pane
-tmux kill-pane -t "$PANE_ID"
+# Kill the pane first
+tmux kill-pane -t "$PANE_ID" 2>/dev/null
+
+# Sync state file to reflect the change
+if [ -f "$SCRIPTS_DIR/sync.sh" ]; then
+    "$SCRIPTS_DIR/sync.sh"
+fi

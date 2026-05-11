@@ -1,0 +1,12 @@
+description = "Kickoff the monorepo scaffolding in a new Gemini pane."
+prompt = """
+You are the Orchestrator. The user wants to kickoff a new project: {{args}}.
+
+### Action
+Use the `tmux-orchestrator` skill to spawn a new Gemini session that immediately starts the scaffolding process.
+
+**Command to execute**:
+`/home/robedwards/.gemini/extensions/vibe-games-extension/skills/tmux-orchestrator/scripts/spawn.sh "gemini /vibe:scaffold {{args}}"`
+
+Once the pane is spawned, confirm the PANE_ID to the user and let them know the blitz is underway.
+"""
