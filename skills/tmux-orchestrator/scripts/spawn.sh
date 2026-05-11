@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright 2026 Google LLC.
+# SPDX-License-Identifier: Apache-2.0
 
 # Ensure we are inside a tmux session
 if [ -z "$TMUX" ]; then

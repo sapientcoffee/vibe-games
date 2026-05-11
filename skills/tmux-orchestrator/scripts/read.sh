@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright 2026 Google LLC.
+# SPDX-License-Identifier: Apache-2.0
 
 # Ensure a PANE_ID was provided
 if [ -z "$1" ]; then
