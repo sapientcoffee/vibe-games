@@ -23,10 +23,10 @@ Invoke the following subagents in parallel to maximize velocity:
      - Maps frontend requests to agent tool calls.
 
 ### Phase 2: Orchestration (Post-Scaffold)
-Once parallel tasks finish, use the `tmux-orchestrator` skill to:
-- Pane 1: `python -m bridge.main` (The API server)
-- Pane 2: `cd frontend && npx serve .` (The UI)
-- Pane 3: `tail -f agent.log` (Agent traces)
+Once parallel tasks finish, use the `tmux-orchestrator` skill to spawn the following panes:
+- **Bridge Server**: `/home/robedwards/.gemini/extensions/vibe-games-extension/skills/tmux-orchestrator/scripts/spawn.sh "python -m bridge.main"`
+- **Frontend UI**: `/home/robedwards/.gemini/extensions/vibe-games-extension/skills/tmux-orchestrator/scripts/spawn.sh "cd frontend && npx serve ."`
+- **Agent UI/Logs**: `/home/robedwards/.gemini/extensions/vibe-games-extension/skills/tmux-orchestrator/scripts/spawn.sh "tail -f agent.log"`
 
 ### Phase 3: Verification
 Confirm Slice 0 (UI -> Bridge -> Agent) is ready for vertical testing.
