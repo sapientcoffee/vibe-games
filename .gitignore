@@ -4,3 +4,6 @@ node_modules/
 .env
 __pycache__/
 .DS_Store
+
+.tmux_panes
+.tmux_panes
