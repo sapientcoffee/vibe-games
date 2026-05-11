@@ -1,0 +1,35 @@
+description = "Instantly bootstrap the monorepo workspace using parallel subagents for an esspresso blitz."
+prompt = """
+We are beginning the competition. We are going to build a solution based on {{args}}.
+
+### Phase 1: Parallel Scaffolding
+Invoke the following subagents in parallel to maximize velocity:
+
+1. **Subagent: `frontend-expert`**
+   - Create `frontend/` directory.
+   - Scaffold a rapid, beautiful Single-Page React App in `frontend/index.html` using Tailwind & React CDNs.
+   - The layout must be a modern dashboard for {{args}}.
+   - Include a `fetch('/api/chat')` call to connect to the Bridge.
+
+2. **Subagent: `google-agents-cli-scaffold`**
+   - Run `agents-cli scaffold create agent --agent adk --prototype`.
+   - Implement the core placeholder agent logic in `agents/app/agent.py`.
+
+3. **Subagent: `generalist`**
+   - **Git Init**: Run `git init`.
+   - **Bridge Protocol**: Create `bridge/main.py`. This must be a FastAPI server that:
+     - Imports the ADK agent from `agents/`.
+     - Exposes a POST `/api/chat` endpoint.
+     - Maps frontend requests to agent tool calls.
+
+### Phase 2: Orchestration (Post-Scaffold)
+Once parallel tasks finish, use the `tmux-orchestrator` skill to:
+- Pane 1: `python -m bridge.main` (The API server)
+- Pane 2: `cd frontend && npx serve .` (The UI)
+- Pane 3: `tail -f agent.log` (Agent traces)
+
+### Phase 3: Validation
+Confirm Slice 0 (UI -> Bridge -> Agent) is ready for vertical testing.
+
+*User Request: {{args}}*
+"""

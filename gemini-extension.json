@@ -1,0 +1,12 @@
+{
+  "name": "vibe-games-extension",
+  "version": "0.1.0",
+  "contextFileName": "vibe-games.md",
+  "mcpServers": {
+    "example-server": {
+      "command": "node",
+      "args": ["./mcp/example-server/index.js"]
+    }
+  },
+  "excludeTools": []
+}
