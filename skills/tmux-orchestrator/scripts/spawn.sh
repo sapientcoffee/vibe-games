@@ -22,9 +22,14 @@ MAIN_PANE=$(tmux show-option -wv @main-pane-id 2>/dev/null)
 if [ -z "$MAIN_PANE" ] || ! tmux display-message -p -t "$MAIN_PANE" "#{pane_id}" >/dev/null 2>&1; then
     MAIN_PANE="$TMUX_PANE"
     tmux set-option -w @main-pane-id "$MAIN_PANE"
-    tmux select-pane -t "$MAIN_PANE" -T "Main Orchestrator"
+    tmux select-pane -t "$MAIN_PANE" -T "🔥 Orchestrator"
 fi
+
+# Apply High-Visibility Styling
 tmux set-option -w pane-border-status top
+tmux set-option -w pane-border-format "#{?pane_active,#[fg=black,bg=cyan,bold],#[fg=white,bg=black]} #{pane_title} #[default]"
+tmux set-option -w pane-active-border-style "fg=cyan"
+tmux set-option -w pane-border-style "fg=white"
 
 # 2. Logic for Servers (Bottom, full-width, small height)
 shopt -s nocasematch
@@ -32,15 +37,29 @@ TYPE="other"
 TITLE="Task"
 if [[ "$COMMAND" =~ (server|dev|start|watch|bridge|uvicorn|fastapi|flask|node|npm|python|localhost) ]]; then
     TYPE="server"
-    TITLE="Server: $COMMAND"
+    # Extract a shorter title from the server command
+    CLEAN_SRV=$(echo "$COMMAND" | sed -E 's/^(npm run|python -m|node)\s*//I')
+    TITLE="📡 $CLEAN_SRV"
     PANE_ID=$(tmux split-window -v -f -l 4 -P -F "#{pane_id}" -t "$MAIN_PANE")
 
 # 3. Logic for Gemini Sessions (Right Column, Stacked)
 elif [[ "$COMMAND" =~ gemini ]]; then
     TYPE="gemini"
-    # Clean up title: remove 'gemini' and leading/trailing quotes/spaces
-    CLEAN_CMD=$(echo "$COMMAND" | sed -E 's/^gemini\s*//I' | sed -E 's/^["'\'']|["'\'']$//g')
-    TITLE="Gemini: ${CLEAN_CMD:-session}"
+    
+    # Inject YOLO mode for gemini sessions
+    if [[ ! "$COMMAND" =~ --yolo ]]; then
+        # Check if it starts with gemini
+        if [[ "$COMMAND" =~ ^gemini ]]; then
+            COMMAND=$(echo "$COMMAND" | sed -E 's/^gemini/gemini --yolo/I')
+        else
+            # If it's something like 'cd dir && gemini'
+            COMMAND="$COMMAND --yolo"
+        fi
+    fi
+
+    # Clean up title: remove 'gemini', '--yolo', and leading/trailing quotes/spaces
+    CLEAN_CMD=$(echo "$COMMAND" | sed -E 's/^gemini\s*//I' | sed -E 's/--yolo\s*//I' | sed -E 's/^["'\'']|["'\'']$//g' | xargs)
+    TITLE="🤖 ${CLEAN_CMD:-session}"
     
     LAST_GEMINI=$(tmux show-option -wv @last-gemini-pane-id 2>/dev/null)
     if [ -n "$LAST_GEMINI" ] && ! tmux display-message -p -t "$LAST_GEMINI" "#{pane_id}" >/dev/null 2>&1; then
@@ -57,7 +76,7 @@ elif [[ "$COMMAND" =~ gemini ]]; then
 # 4. Default fallback
 else
     PANE_ID=$(tmux split-window -h -P -F "#{pane_id}" -t "$MAIN_PANE")
-    TITLE="Extra: $COMMAND"
+    TITLE="⚙️ $COMMAND"
 fi
 shopt -u nocasematch
 
