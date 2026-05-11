@@ -19,6 +19,18 @@ Instantly bootstraps a monorepo workspace.
 - **Bridge:** FastAPI server exposing `/api/chat`.
 - **Orchestration:** Spawns tmux panes for all services.
 
+### `/vibe:plan [use-case]`
+Initiates a high-velocity planning session.
+- **Grill-me:** Interactive interview to refine domain terminology and ADRs.
+- **To-PRD:** Automated synthesis into a comprehensive PRD.
+- **To-Issues:** Vertical breakdown into "tracer bullet" implementation tickets.
+
+### `/vibe:to-prd`
+Synthesizes the current context into a PRD.
+
+### `/vibe:to-issues`
+Breaks the current PRD/Plan into vertical "tracer bullet" implementation tickets.
+
 ### `/vibe:slice [description]`
 Generates presumptive vertical slices (tracer bullets) to begin immediate implementation without manual issue tracking.
 
@@ -34,7 +46,7 @@ Generates presumptive vertical slices (tracer bullets) to begin immediate implem
 The easiest way to install this extension is directly via the Gemini CLI:
 
 ```bash
-gemini extensions install sapientcoffee/vibe-games
+gemini extensions install https://github.com/sapientcoffee/vibe-games
 ```
 
 Alternatively, for local development:
@@ -45,11 +57,13 @@ Alternatively, for local development:
    gemini extensions link /path/to/vibe-games
    ```
 
-## Best Practices (Blitz Mode)
+### Best Practices (Blitz Mode)
 
 1. **Start with Scaffold:** Always run `/vibe:scaffold` as your first move.
-2. **Think Vertically:** Use `/vibe:slice` to identify the fastest path from UI to Tool.
-3. **Verify Early:** Use the built-in `agents-cli eval` triggers before wiring to the UI.
+2. **Centralized Planning:** All artifacts (CONTEXT.md, ADRs, PRD, Issues) are stored in the `.plan/` directory for easy navigation and persistence.
+3. **Think Vertically:** Use `/vibe:slice` to identify the fastest path from UI to Tool.
+4. **Verify Early:** Use the built-in `agents-cli eval` triggers before wiring to the UI.
+
 
 ## License
 

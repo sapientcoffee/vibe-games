@@ -28,7 +28,7 @@ Once parallel tasks finish, use the `tmux-orchestrator` skill to:
 - Pane 2: `cd frontend && npx serve .` (The UI)
 - Pane 3: `tail -f agent.log` (Agent traces)
 
-### Phase 3: Validation
+### Phase 3: Verification
 Confirm Slice 0 (UI -> Bridge -> Agent) is ready for vertical testing.
 
 *User Request: {{args}}*

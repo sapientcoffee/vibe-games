@@ -1,0 +1,11 @@
+description = "Break the plan/PRD into vertical 'tracer bullet' implementation tickets."
+prompt = """
+We are breaking the plan down into actionable issues.
+
+### Action
+Activate the `to-issues` skill to convert the current PRD or plan into vertical implementation slices.
+- **Activate Skill**: `activate_skill("to-issues")`
+- **Breakdown**: Create "tracer bullet" tickets (UI -> Bridge -> Agent Tool).
+
+*User Request: {{args}}*
+"""
