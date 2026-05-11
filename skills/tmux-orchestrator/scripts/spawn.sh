@@ -22,43 +22,49 @@ MAIN_PANE=$(tmux show-option -wv @main-pane-id 2>/dev/null)
 if [ -z "$MAIN_PANE" ] || ! tmux display-message -p -t "$MAIN_PANE" "#{pane_id}" >/dev/null 2>&1; then
     MAIN_PANE="$TMUX_PANE"
     tmux set-option -w @main-pane-id "$MAIN_PANE"
+    tmux select-pane -t "$MAIN_PANE" -T "Main Orchestrator"
 fi
+tmux set-option -w pane-border-status top
 
 # 2. Logic for Servers (Bottom, full-width, small height)
 shopt -s nocasematch
 TYPE="other"
+TITLE="Task"
 if [[ "$COMMAND" =~ (server|dev|start|watch|bridge|uvicorn|fastapi|flask|node|npm|python|localhost) ]]; then
     TYPE="server"
-    # Target the MAIN_PANE for the split to stay in the same window
+    TITLE="Server: $COMMAND"
     PANE_ID=$(tmux split-window -v -f -l 4 -P -F "#{pane_id}" -t "$MAIN_PANE")
 
 # 3. Logic for Gemini Sessions (Right Column, Stacked)
 elif [[ "$COMMAND" =~ gemini ]]; then
     TYPE="gemini"
-    LAST_GEMINI=$(tmux show-option -wv @last-gemini-pane-id 2>/dev/null)
+    # Clean up title: remove 'gemini' and leading/trailing quotes/spaces
+    CLEAN_CMD=$(echo "$COMMAND" | sed -E 's/^gemini\s*//I' | sed -E 's/^["'\'']|["'\'']$//g')
+    TITLE="Gemini: ${CLEAN_CMD:-session}"
     
-    # Check if the last gemini pane still exists
+    LAST_GEMINI=$(tmux show-option -wv @last-gemini-pane-id 2>/dev/null)
     if [ -n "$LAST_GEMINI" ] && ! tmux display-message -p -t "$LAST_GEMINI" "#{pane_id}" >/dev/null 2>&1; then
         LAST_GEMINI=""
     fi
 
     if [ -z "$LAST_GEMINI" ]; then
-        # First gemini session: split vertically (right) from main pane
         PANE_ID=$(tmux split-window -h -P -F "#{pane_id}" -t "$MAIN_PANE")
     else
-        # Subsequent sessions: split horizontally (down) from the last gemini pane
         PANE_ID=$(tmux split-window -v -P -F "#{pane_id}" -t "$LAST_GEMINI")
     fi
-    # Update the tracker for THIS WINDOW (-w)
     tmux set-option -w @last-gemini-pane-id "$PANE_ID"
 
 # 4. Default fallback
 else
     PANE_ID=$(tmux split-window -h -P -F "#{pane_id}" -t "$MAIN_PANE")
+    TITLE="Extra: $COMMAND"
 fi
 shopt -u nocasematch
 
-# 5. Record state
+# 5. Set the title for the new pane
+tmux select-pane -t "$PANE_ID" -T "$TITLE"
+
+# 6. Record state
 echo "$(date +'%Y-%m-%dT%H:%M:%S') | $PANE_ID | $TYPE | $COMMAND" >> "$STATE_FILE"
 
 # Send the command if provided
