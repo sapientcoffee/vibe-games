@@ -1,6 +1,6 @@
 {
   "name": "vibe-games-extension",
-  "version": "0.2.9",
+  "version": "0.2.10",
   "contextFileName": "vibe-games.md",
   "mcpServers": {
     "example-server": {

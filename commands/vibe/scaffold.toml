@@ -1,35 +1,37 @@
-description = "Instantly bootstrap the monorepo workspace using parallel subagents for an esspresso blitz."
+description = "Instantly bootstrap a generic monorepo workspace to demonstrate Vertex AI connectivity."
 prompt = """
-We are beginning the competition. We are going to build a solution based on {{args}}.
+We are performing an espresso blitz to bootstrap a new project. Our goal is a functional "Tracer Bullet" (UI -> Bridge -> Vertex AI).
+
+### Phase 0: Environment Check
+Run the `/vibe:check-env` command to ensure Vertex AI variables and `.env` are ready.
 
 ### Phase 1: Parallel Scaffolding
-Invoke the following subagents in parallel to maximize velocity:
+Invoke the following subagents in parallel:
 
 1. **Subagent: `frontend-expert`**
    - Create `frontend/` directory.
-   - Scaffold a rapid, beautiful Single-Page React App in `frontend/index.html` using Tailwind & React CDNs.
-   - The layout must be a modern dashboard for {{args}}.
-   - Include a `fetch('/api/chat')` call to connect to the Bridge.
+   - Scaffold a "Modern AI Dashboard" in `frontend/index.html` using Tailwind & React CDNs.
+   - Use a generic, professional aesthetic (dark mode, clean typography).
+   - Implement a chat interface that calls `POST /api/chat`.
 
 2. **Subagent: `google-agents-cli-scaffold`**
    - Run `agents-cli scaffold create agent --agent adk --prototype`.
-   - Implement the core placeholder agent logic in `agents/app/agent.py`.
+   - Implement a simple "Hello World" agent in `agents/app/agent.py` that responds with "System Ready: Connected to Vertex AI".
 
 3. **Subagent: `generalist`**
    - **Git Init**: Run `git init`.
-   - **Bridge Protocol**: Create `bridge/main.py`. This must be a FastAPI server that:
-     - Imports the ADK agent from `agents/`.
-     - Exposes a POST `/api/chat` endpoint.
-     - Maps frontend requests to agent tool calls.
+   - **Bridge Protocol**: Create `bridge/main.py`. This MUST implement the **Vertex AI Runner Pattern** from `vibe-games.md`:
+     - Load `.env`.
+     - Use `google.adk.runners.Runner`.
+     - Expose `POST /api/chat`.
+     - Map frontend JSON to `runner.run_async`.
 
 ### Phase 2: Orchestration (Post-Scaffold)
-Once parallel tasks finish, use the `tmux-orchestrator` skill to spawn the following panes:
-- **Bridge Server**: `/home/robedwards/.gemini/extensions/vibe-games-extension/skills/tmux-orchestrator/scripts/spawn.sh "python -m bridge.main"`
-- **Frontend UI**: `/home/robedwards/.gemini/extensions/vibe-games-extension/skills/tmux-orchestrator/scripts/spawn.sh "cd frontend && npx serve ."`
-- **Agent UI/Logs**: `/home/robedwards/.gemini/extensions/vibe-games-extension/skills/tmux-orchestrator/scripts/spawn.sh "tail -f agent.log"`
+Once parallel tasks finish, use the `tmux-orchestrator` skill to spawn:
+- **Bridge Server**: `./skills/tmux-orchestrator/scripts/spawn.sh "python -m bridge.main"`
+- **Frontend UI**: `./skills/tmux-orchestrator/scripts/spawn.sh "cd frontend && npx serve ."`
+- **Agent Logs**: `./skills/tmux-orchestrator/scripts/spawn.sh "tail -f agent.log"`
 
 ### Phase 3: Verification
-Confirm Slice 0 (UI -> Bridge -> Agent) is ready for vertical testing.
-
-*User Request: {{args}}*
+Verify that opening the UI and sending a message returns the "System Ready" response from Vertex AI.
 """
