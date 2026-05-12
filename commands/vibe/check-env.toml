@@ -1,0 +1,36 @@
+description = "Verify Vertex AI environment variables and output setup commands if missing."
+prompt = """
+You are the Vertex AI Assistant. Your task is to check if the current environment is ready for the Gemini Enterprise Agent Platform.
+
+### Current Environment Check
+!{
+MISSING=()
+[ -z "$GOOGLE_GENAI_USE_VERTEXAI" ] && MISSING+=("export GOOGLE_GENAI_USE_VERTEXAI=\\"True\\"")
+if [ -z "$GOOGLE_CLOUD_PROJECT" ]; then
+    PROJECT=$(gcloud config get-value project 2>/dev/null)
+    [ -z "$PROJECT" ] && PROJECT="your-project-id"
+    MISSING+=("export GOOGLE_CLOUD_PROJECT=\\"$PROJECT\\"")
+fi
+if [ -z "$GOOGLE_CLOUD_QUOTA_PROJECT" ]; then
+    PROJECT=$(gcloud config get-value project 2>/dev/null)
+    [ -z "$PROJECT" ] && PROJECT="your-project-id"
+    MISSING+=("export GOOGLE_CLOUD_QUOTA_PROJECT=\\"$PROJECT\\"")
+fi
+[ -z "$GOOGLE_CLOUD_LOCATION" ] && MISSING+=("export GOOGLE_CLOUD_LOCATION=\\"us-central1\\"")
+
+if [ ${#MISSING[@]} -eq 0 ]; then
+    echo "✅ Vertex AI environment is correctly configured."
+else
+    echo "⚠️ Missing Vertex AI environment variables. Run the following commands to fix your session:"
+    for cmd in "${MISSING[@]}"; do
+        echo "$cmd"
+    done
+fi
+}
+
+### Rationale
+Based on the guidelines in `vibe-games.md`, these variables are mandatory for:
+1. **Quota Management**: Ensuring requests are billed to the correct project.
+2. **Feature Access**: Guaranteeing access to the latest Gemini models in `us-central1`.
+3. **Protocol Stability**: Forcing the ADK to use Vertex AI as the backend.
+"""
