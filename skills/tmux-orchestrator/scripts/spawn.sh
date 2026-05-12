@@ -17,15 +17,23 @@ if [ -f "$SCRIPTS_DIR/sync.sh" ]; then
     "$SCRIPTS_DIR/sync.sh"
 fi
 
-# 1. Initialize or retrieve the Main Orchestrator pane ID for THIS WINDOW (-w)
-MAIN_PANE=$(tmux show-option -wv @main-pane-id 2>/dev/null)
+# 1. Robustly identify the Main Orchestrator pane
+# We look for a pane with the specific title in the current window
+MAIN_PANE=$(tmux list-panes -F "#{pane_id} #{pane_title}" | grep "🔥 Orchestrator" | head -n 1 | awk '{print $1}')
+
+if [ -z "$MAIN_PANE" ]; then
+    # Fallback to the tracked window option
+    MAIN_PANE=$(tmux show-option -wv @main-pane-id 2>/dev/null)
+fi
+
 if [ -z "$MAIN_PANE" ] || ! tmux display-message -p -t "$MAIN_PANE" "#{pane_id}" >/dev/null 2>&1; then
+    # If still not found, the current pane becomes the orchestrator
     MAIN_PANE="$TMUX_PANE"
     tmux set-option -w @main-pane-id "$MAIN_PANE"
     tmux select-pane -t "$MAIN_PANE" -T "🔥 Orchestrator"
 fi
 
-# Apply High-Visibility Styling
+# Ensure high-visibility styling is active
 tmux set-option -w pane-border-status top
 tmux set-option -w pane-border-format "#{?pane_active,#[fg=black,bg=cyan,bold],#[fg=white,bg=black]} #{pane_title} #[default]"
 tmux set-option -w pane-active-border-style "fg=cyan"
@@ -37,10 +45,11 @@ TYPE="other"
 TITLE="Task"
 if [[ "$COMMAND" =~ (server|dev|start|watch|bridge|uvicorn|fastapi|flask|node|npm|python|localhost) ]]; then
     TYPE="server"
-    # Extract a shorter title from the server command
     CLEAN_SRV=$(echo "$COMMAND" | sed -E 's/^(npm run|python -m|node)\s*//I')
     TITLE="📡 $CLEAN_SRV"
-    PANE_ID=$(tmux split-window -v -f -l 4 -P -F "#{pane_id}" -t "$MAIN_PANE")
+    # -d prevents focus shift
+    # -f -v ensures it spans the full window at the bottom
+    PANE_ID=$(tmux split-window -d -v -f -l 4 -P -F "#{pane_id}" -t "$MAIN_PANE")
 
 # 3. Logic for Gemini Sessions (Right Column, Stacked)
 elif [[ "$COMMAND" =~ gemini ]]; then
@@ -48,16 +57,13 @@ elif [[ "$COMMAND" =~ gemini ]]; then
     
     # Inject YOLO mode for gemini sessions
     if [[ ! "$COMMAND" =~ --yolo ]]; then
-        # Check if it starts with gemini
         if [[ "$COMMAND" =~ ^gemini ]]; then
             COMMAND=$(echo "$COMMAND" | sed -E 's/^gemini/gemini --yolo/I')
         else
-            # If it's something like 'cd dir && gemini'
             COMMAND="$COMMAND --yolo"
         fi
     fi
 
-    # Clean up title: remove 'gemini', '--yolo', and leading/trailing quotes/spaces
     CLEAN_CMD=$(echo "$COMMAND" | sed -E 's/^gemini\s*//I' | sed -E 's/--yolo\s*//I' | sed -E 's/^["'\'']|["'\'']$//g' | xargs)
     TITLE="🤖 ${CLEAN_CMD:-session}"
     
@@ -67,15 +73,17 @@ elif [[ "$COMMAND" =~ gemini ]]; then
     fi
 
     if [ -z "$LAST_GEMINI" ]; then
-        PANE_ID=$(tmux split-window -h -P -F "#{pane_id}" -t "$MAIN_PANE")
+        # First gemini session: split vertically (right) from main pane
+        PANE_ID=$(tmux split-window -d -h -P -F "#{pane_id}" -t "$MAIN_PANE")
     else
-        PANE_ID=$(tmux split-window -v -P -F "#{pane_id}" -t "$LAST_GEMINI")
+        # Subsequent sessions: split horizontally (down) from the last gemini pane
+        PANE_ID=$(tmux split-window -d -v -P -F "#{pane_id}" -t "$LAST_GEMINI")
     fi
     tmux set-option -w @last-gemini-pane-id "$PANE_ID"
 
 # 4. Default fallback
 else
-    PANE_ID=$(tmux split-window -h -P -F "#{pane_id}" -t "$MAIN_PANE")
+    PANE_ID=$(tmux split-window -d -h -P -F "#{pane_id}" -t "$MAIN_PANE")
     TITLE="⚙️ $COMMAND"
 fi
 shopt -u nocasematch
