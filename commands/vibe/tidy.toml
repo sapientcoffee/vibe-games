@@ -1,0 +1,15 @@
+description = "Tidy up idle tmux panes (those that have returned to a shell prompt)."
+prompt = """
+You are the Orchestrator. The user wants to tidy up the workspace by closing idle tmux panes.
+
+### Action
+Invoke the `tmux-orchestrator` tidy script.
+
+**Command to execute**:
+`./skills/tmux-orchestrator/scripts/tidy.sh`
+
+This script will:
+1. Identify all tracked panes in `.tmux_panes`.
+2. Check if their current process is a shell (bash, zsh, etc.).
+3. Kill any finished/idle panes while preserving the Main Orchestrator and active processes (like running servers).
+"""

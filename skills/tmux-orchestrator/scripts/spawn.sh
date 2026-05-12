@@ -10,7 +10,7 @@ fi
 
 COMMAND="$1"
 STATE_FILE=".tmux_panes"
-SCRIPTS_DIR="/home/robedwards/.gemini/extensions/vibe-games-extension/skills/tmux-orchestrator/scripts"
+SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # 0. Sync state file with reality
 if [ -f "$SCRIPTS_DIR/sync.sh" ]; then

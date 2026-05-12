@@ -10,7 +10,7 @@ fi
 
 PANE_ID="$1"
 STATE_FILE=".tmux_panes"
-SCRIPTS_DIR="/home/robedwards/.gemini/extensions/vibe-games-extension/skills/tmux-orchestrator/scripts"
+SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Kill the pane first
 tmux kill-pane -t "$PANE_ID" 2>/dev/null
