@@ -1,37 +1,19 @@
-description = "Instantly bootstrap a generic monorepo workspace to demonstrate Vertex AI connectivity."
+description = "Instantly bootstrap a functional Tracer Bullet using high-velocity rules."
 prompt = """
-We are performing an espresso blitz to bootstrap a new project. Our goal is a functional "Tracer Bullet" (UI -> Bridge -> Vertex AI).
+We are performing an espresso blitz. Our goal is a functional "Tracer Bullet" (UI -> Bridge -> Gemini 3).
 
-### Phase 0: Environment Check
-Run the `/vibe:check-env` command to ensure Vertex AI variables and `.env` are ready.
-
-### Phase 1: Parallel Scaffolding
-Invoke the following subagents in parallel:
-
-1. **Subagent: `frontend-expert`**
-   - Create `frontend/` directory.
-   - Scaffold a "Modern AI Dashboard" in `frontend/index.html` using Tailwind & React CDNs.
-   - Use a generic, professional aesthetic (dark mode, clean typography).
-   - Implement a chat interface that calls `POST /api/chat`.
-
-2. **Subagent: `google-agents-cli-scaffold`**
-   - Run `agents-cli scaffold create agent --agent adk --prototype`.
-   - Implement a simple "Hello World" agent in `agents/app/agent.py` that responds with "System Ready: Connected to Vertex AI".
-
-3. **Subagent: `generalist`**
-   - **Git Init**: Run `git init`.
-   - **Bridge Protocol**: Create `bridge/main.py`. This MUST implement the **Vertex AI Runner Pattern** from `vibe-games.md`:
-     - Load `.env`.
-     - Use `google.adk.runners.Runner`.
-     - Expose `POST /api/chat`.
-     - Map frontend JSON to `runner.run_async`.
+### Phase 1: High-Velocity Scaffolding
+Invoke a subagent to run the `scripts/setup_slice.sh` script. This script follows the **High-Velocity Setup Rules**:
+1. **Force Public Index**: Uses `--index-url https://pypi.org/simple`.
+2. **Explicit Paths**: Uses absolute repository paths for the bridge and virtual env.
+3. **Hybrid Ready**: Scaffolds a bridge that can toggle between Gemini API and Vertex AI.
 
 ### Phase 2: Orchestration (Post-Scaffold)
-Once parallel tasks finish, use the `tmux-orchestrator` skill to spawn:
-- **Bridge Server**: `./skills/tmux-orchestrator/scripts/spawn.sh "python -m bridge.main"`
+Once scaffolding finishes, use the `tmux-orchestrator` skill to spawn:
+- **Bridge Server**: `./skills/tmux-orchestrator/scripts/spawn.sh "app/.venv/bin/python3 bridge/main.py"`
 - **Frontend UI**: `./skills/tmux-orchestrator/scripts/spawn.sh "cd frontend && npx serve ."`
-- **Agent Logs**: `./skills/tmux-orchestrator/scripts/spawn.sh "tail -f agent.log"`
+- **Agent Logs**: `./skills/tmux-orchestrator/scripts/spawn.sh "tail -f playground.log"`
 
 ### Phase 3: Verification
-Verify that opening the UI and sending a message returns the "System Ready" response from Vertex AI.
+Verify that Slice 0 is ready. Use `gemini-3-flash-preview` for the first verification turn.
 """
