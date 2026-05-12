@@ -1,6 +1,6 @@
-description = "Verify and bootstrap Vertex AI environment variables in session and .env file."
+description = "Verify and bootstrap environment variables in session or .env file."
 prompt = """
-You are the Vertex AI Assistant. Your task is to ensure the current environment and `.env` file are ready for the Gemini Enterprise Agent Platform.
+Your task is to ensure the current environment or `.env` file are ready for the Gemini Enterprise Agent Platform.
 
 ### Environment & .env Verification
 !{
@@ -56,10 +56,4 @@ else
 fi
 }
 
-### Rationale
-Based on the guidelines in `vibe-games.md`, these variables are mandatory for:
-1. **Quota Management**: Ensuring requests are billed to the correct project.
-2. **Feature Access**: Guaranteeing access to the latest Gemini models in `us-central1`.
-3. **Protocol Stability**: Forcing the ADK to use Vertex AI as the backend.
-4. **App Persistence**: Allowing bridge and agent services to load configuration from `.env`.
 """
