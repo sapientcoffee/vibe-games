@@ -8,9 +8,28 @@ if [ -z "$TMUX" ]; then
     exit 1
 fi
 
-COMMAND="$1"
 STATE_FILE=".tmux_panes"
 SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Determine the command to run
+if [[ -f "$1" && "$2" =~ ^vibe- ]]; then
+    # Special pattern: <issue_file> <agent_type>
+    ISSUE_FILE="$1"
+    AGENT_NAME="$2"
+    TEMPLATE_PATH="$SCRIPTS_DIR/../../send-it/references/subagent-prompt.md"
+    
+    if [ -f "$TEMPLATE_PATH" ]; then
+        # Read template, replace path, and escape single quotes for the command line
+        PROMPT=$(cat "$TEMPLATE_PATH" | sed "s|<PATH_TO_ISSUE>|$ISSUE_FILE|g")
+        PROMPT_ESCAPED="${PROMPT//\'/\'\\\'\'}"
+        COMMAND="gemini invoke_agent $AGENT_NAME --prompt '$PROMPT_ESCAPED'"
+    else
+        COMMAND="gemini invoke_agent $AGENT_NAME --prompt \"Implement $ISSUE_FILE\""
+    fi
+else
+    # Default: capture all arguments as the command
+    COMMAND="$*"
+fi
 
 # 0. Sync state file with reality
 if [ -f "$SCRIPTS_DIR/sync.sh" ]; then
@@ -101,6 +120,4 @@ if [ -n "$COMMAND" ]; then
 fi
 
 # Output the PANE_ID to stdout
-echo "$PANE_ID"
-utput the PANE_ID to stdout
 echo "$PANE_ID"
