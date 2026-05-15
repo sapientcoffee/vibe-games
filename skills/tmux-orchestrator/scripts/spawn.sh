@@ -78,7 +78,7 @@ if [[ "$COMMAND" =~ gemini ]]; then
     TITLE="🤖 ${CLEAN_CMD:-session}"
     
     LAST_GEMINI=$(tmux show-option -wv @last-gemini-pane-id 2>/dev/null)
-    if [ -n "$LAST_GEMINI" ] && ! tmux display-message -p -t "$LAST_GEMINI" "#{pane_id}" >/dev/null 2>&1; then
+    if [ -n "$LAST_GEMINI" ] && ! tmux list-panes -a -F "#{pane_id}" 2>/dev/null | grep -q "^$LAST_GEMINI$"; then
         LAST_GEMINI=""
     fi
 
