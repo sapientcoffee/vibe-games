@@ -1,76 +1,83 @@
-# Vibe Games Gemini CLI Extension 🏎️💨
+# 🚀 Vibe Games Gemini CLI Extension (Hacker Vibe Edition)
 
-A high-velocity extension for the Gemini CLI, specifically optimized for building and validating agentic prototypes in high-pressure environments like the **Vibe Games Competition**.
+A ruthless, high-velocity extension for the Gemini CLI, specifically optimized for building, validating, and demoing agentic prototypes in under 40 minutes for the **Vibe Games Competition**.
 
-## The Winning Playbook: "The Blitz" 🚀
+This extension abandons traditional, bloated software development lifecycles in favor of a deterministic, 4-step terminal pipeline that launches a visually stunning `tmux` swarm of AI subagents.
 
-In a 40-minute sprint, Turn 1 is for Infrastructure. Use the **Blitz Protocol** to start your design and your dev environment simultaneously.
+---
 
-### High-Speed Workflow
+## 🏎️ The Winning Playbook: The Hacker Vibe Pipeline
+
+In a 40-minute live sprint, context switching is fatal. This pipeline replaces interactive manual scaffolding with a straight-line, data-first execution path.
+
+### The Swarm Architecture
 
 ```mermaid
 sequenceDiagram
     participant User
-    participant Gemini as Gemini CLI (Orchestrator)
-    participant Blitz as vibe-blitz Skill
-    participant FS as File System / OS
-    participant Design as PRD / DESIGN.md
-
-    User->>Gemini: /vibe:blitz "Use Case"
-    Gemini->>Blitz: Activate Skill
-    par Parallel Execution
-        Blitz->>FS: Spawn blitz-bootstrap.sh (Background)
-        Note right of FS: Scaffolds React, FastAPI, ADK
-        Note right of FS: Runs npm/uv install
-        Gemini->>User: "What is the core use-case?"
+    participant G as Gemini CLI
+    participant FS as File System (.plans/ & data.json)
+    participant Tmux as Tmux Swarm
+    
+    User->>G: /vibe-check (Lock Scope)
+    G->>FS: Init KANBAN.md
+    User->>G: /blueprint (Skeleton & Data)
+    G->>FS: Write blueprint.md & seed data.json
+    User->>G: /chop-shop (Task Slicing)
+    G->>FS: Write issue-*.md slices
+    User->>G: /send-it (Ignite Swarm)
+    G->>Tmux: spawn watch-kanban.sh & subagents
+    loop Parallel Stage Execution
+        Tmux->>FS: Subagents write code & update .state files
+        FS-->>Tmux: Watcher safely rebuilds KANBAN.md diagram
     end
-    User->>Gemini: Discusses logic/schema
-    Gemini->>Design: Update PRD.md & DESIGN.md
-    Note over FS,Design: ~5 mins later: Infrastructure is warm
-    Gemini->>User: "Tracer Bullet Ready. Let's code!"
-    Gemini->>Design: /vibe:to-issues
-    Gemini->>FS: /vibe:to-code (Parallel Implementation)
 ```
 
-## Primary Commands
+---
 
-### `/vibe:blitz [use-case]` **(RECOMMENDED)**
-The ultimate sprint starter.
-- **Background:** Fires `blitz-bootstrap.sh` to build React (User/Admin), FastAPI (Bridge), and ADK (Agent) while installing all dependencies.
-- **Foreground:** Immediately starts the design interview to build your `PRD.md` and `data.json` schema.
-- **Result:** You are ready to code the moment you finish your plan.
+## 🔥 The 4 Core Commands
 
-### `/vibe:plan`
-Initiates a high-velocity planning session (PRD -> Slices).
+### 1. `/vibe-check` (The Pit Stop)
+Rapid-fire Hackathon Q&A to nail down the core demo scope.
+*   **Action:** Asks a strict maximum of 3 Yes/No default questions to lock in the transactional flow and edge cases.
+*   **Result:** Outputs the context payload and initializes the `KANBAN.md` tracker.
 
-### `/vibe:to-prd` / `/vibe:to-issues`
-Core utilities for converting chat context into actionable implementation tickets in `.plan/`.
+### 2. `/blueprint` (The Spellbook)
+Converts the raw vibe-check context into a strict Technical Skeleton.
+*   **Action:** Generates the ADK System Prompt, defines Deep Modules, and—crucially—**seeds the initial `data.json` database** with 3-5 realistic mock records based on the audience's chosen use case.
+*   **Result:** The immutable data schema is locked in for the subagents.
 
-## Deprecated / Legacy Commands (Use with Caution)
+### 3. `/chop-shop` (The Slicer)
+Breaks the blueprint into independently-grabbable parallel tasks.
+*   **Action:** Slices the build into max 4 tasks tagged with `[FRONTEND]`, `[BACKEND]`, or `[ADK-INIT]`. 
+*   **Result:** Populates the `To Do` column of the live Mermaid Kanban board.
 
-> These commands are slower or redundant given the new Blitz workflow.
+### 4. `/send-it` (The Swarm Orchestrator) **[STAGE MAGIC]**
+Ignites the parallel execution engine.
+*   **Action:** Spawns specialized subagents (`vibe-adk-hacker`, `vibe-ui-artist`) into isolated `tmux` panes.
+*   **Result:** The audience watches multiple terminal panes stream code simultaneously while the main pane dynamically updates the Mermaid Kanban board as tasks move to `DONE`.
 
-- **`/vibe:scaffold`**: Use `/vibe:blitz` instead. Blitz does everything scaffold does but in the background while you plan.
-- **`/vibe:kickoff`**: Redundant. Uses tmux panes for setup which can be slower to navigate in a sprint than the Blitz's integrated workflow.
-- **`/vibe:slice`**: Replaced by the more robust `/vibe:to-issues` + `vibe-blitz` coordination.
+---
 
-## Skills Included
+## 🎯 Architecture & Infrastructure Rules
 
-- **`vibe-blitz`**: The high-speed orchestrator and bootstrap engine.
-- **`vibe-bridge`**: Generates the FastAPI connective tissue.
-- **`to-code`**: Orchestrates parallel implementation across multiple panes.
-- **`tmux-orchestrator`**: Manages terminal panes for a live dev environment.
+1.  **The Agents CLI Advantage**: Subagents MUST scaffold the backend using `agents-cli init vibe-agent -y --agent adk`. Zero manual boilerplate.
+2.  **Data-First Execution**: The dynamic `data.json` schema generated by the Blueprint is the immutable law. No Postgres, no Firestore. Instantaneous local JSON reads/writes only.
+3.  **Local-First / Zero-Cloud**: ALL infrastructure (UI, APIs) runs locally. The ONLY external dependency is the LLM via `GOOGLE_API_KEY`.
+4.  **State Directory Safety**: Subagents NEVER write directly to `.plans/KANBAN.md`. They write to `.plans/swarm-state/<issue>.state`. A background daemon (`watch-kanban.sh`) aggregates these files every 2 seconds to rebuild the board safely without race conditions.
+5.  **Zero Tests**: Standard TDD is suspended. If the endpoint returns valid JSON, it ships.
 
-## Architecture: The "Tracer Bullet" 🎯
-Strictly enforced by `DESIGN.md`:
-1. **User UI (3000)**: React + Tailwind.
-2. **Admin UI (3001)**: Management dashboard.
-3. **Bridge API (8000)**: FastAPI (The Hub).
-4. **Agent**: ADK Agent.
-5. **Persistence**: Local `data/data.json` (Zero-Cloud).
+---
 
+## 🗑️ Deprecated Commands (Pruned for Speed)
 
-## License
+The following legacy commands have been removed as they introduce too much friction or hallucination risk for a 40-minute sprint:
+*   `/grill-me`, `/to-prd`, `/to-slices`, `/to-code` (Replaced by the Hacker Vibe Pipeline).
+*   `/vibe:blitz`, `/vibe:kickoff`, `/vibe:scaffold` (Replaced by `agents-cli` integrated initialization).
+
+---
+
+## 📜 License
 
 Copyright 2026 Google LLC.
 Licensed under the Apache License, Version 2.0. See [LICENSE](./LICENSE) for details.

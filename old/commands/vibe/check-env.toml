@@ -1,0 +1,59 @@
+description = "Verify and bootstrap environment variables in session or .env file."
+prompt = """
+Your task is to ensure the current environment or `.env` file are ready for the Gemini Enterprise Agent Platform.
+
+### Environment & .env Verification
+!{
+VARS=("GOOGLE_GENAI_USE_VERTEXAI" "GOOGLE_CLOUD_PROJECT" "GOOGLE_CLOUD_QUOTA_PROJECT" "GOOGLE_CLOUD_LOCATION")
+PROJECT=$(gcloud config get-value project 2>/dev/null)
+[ -z "$PROJECT" ] && PROJECT="<your-project-id>"
+DEFAULT_VALS=("True" "$PROJECT" "$PROJECT" "us-central1")
+
+SESSION_MISSING=()
+DOTENV_ADDED=()
+
+# Check Session
+for i in "${!VARS[@]}"; do
+    var=${VARS[$i]}
+    val=${DEFAULT_VALS[$i]}
+    [ -z "${!var}" ] && SESSION_MISSING+=("export $var=\\"$val\\"")
+done
+
+# Check/Bootstrap .env
+if [ ! -f .env ]; then
+    echo "# Vertex AI Configuration" > .env
+    for i in "${!VARS[@]}"; do
+        var=${VARS[$i]}
+        val=${DEFAULT_VALS[$i]}
+        echo "$var=\\"$val\\"" >> .env
+        DOTENV_ADDED+=("$var")
+    done
+    echo "🆕 Created .env with recommended Vertex AI settings."
+else
+    for i in "${!VARS[@]}"; do
+        var=${VARS[$i]}
+        val=${DEFAULT_VALS[$i]}
+        if ! grep -q "^$var=" .env; then
+            echo "$var=\\"$val\\"" >> .env
+            DOTENV_ADDED+=("$var")
+        fi
+    done
+    if [ ${#DOTENV_ADDED[@]} -ne 0 ]; then
+        echo "📝 Appended missing Vertex AI variables to .env."
+    fi
+fi
+
+if [ ${#SESSION_MISSING[@]} -eq 0 ] && [ ${#DOTENV_ADDED[@]} -eq 0 ]; then
+    echo "✅ Vertex AI environment and .env file are correctly configured."
+else
+    if [ ${#SESSION_MISSING[@]} -ne 0 ]; then
+        echo "⚠️  Missing Session Variables. Run these to fix your current terminal:"
+        for cmd in "${SESSION_MISSING[@]}"; do echo "$cmd"; done
+    fi
+    if [ ${#DOTENV_ADDED[@]} -ne 0 ]; then
+        echo "ℹ️  Note: .env has been updated with values/placeholders. Please verify them."
+    fi
+fi
+}
+
+"""

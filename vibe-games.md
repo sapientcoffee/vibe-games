@@ -1,72 +1,66 @@
-# Vibe Games Extension Context
+# 🚀 Vibe Games Extension Context (Hacker Vibe Edition)
 
-This extension provides specialized commands, skills, subagents, and tools for the Vibe Games Competition.
+This extension provides a ruthless, high-speed pipeline of specialized commands, skills, subagents, and tools designed to build and demonstrate a working prototype in under 40 minutes for the Vibe Games Competition.
 
-## Core Mandates
-1. **Vertical Slice Priority**: Never build horizontal layers. Always build a "Tracer Bullet" that connects UI -> Bridge -> Agent Tool in one turn.
-2. **Bridge Protocol**: All communication between the React Frontend and ADK Agent MUST pass through the FastAPI bridge in `bridge/main.py`.
-3. **Local-First Architecture**: ALL infrastructure (UI, Bridge API) MUST run locally. The ONLY external network dependency is the LLM for ADK.
-4. **Zero-Cloud Persistence**: Use `data.json` for all structured data and a local `storage/` directory for files. No Cloud SQL or Firestore.
-5. **Validation (Lite)**: Only validate what is absolutely critical. Prioritize manual UI verification over writing tests.
-6. **Spectator Mode (LIVE VIBES)**: Because people are watching, use emojis (🚀, 🤖, ✨, 🧠), witty status updates, and clear "Phase" markers. Make the process feel like a high-speed heist.
-7. **Speed is King (NO TESTS)**: Standard developer practices (Unit Tests, exhaustive TDD) are SUSPENDED. Do NOT write tests unless they are the *only* way to prove the feature works. Every second spent on a test is a second lost to the competitors.🏎️💨
+## ⚡ Core Mandates
+1. **The Agents CLI Advantage**: Never write boilerplate. Use `agents-cli init vibe-agent -y --agent adk` as the absolute first step for backend scaffolding.
+2. **Data-First Execution**: The JSON schema generated in the Blueprint is the immutable law. Subagents must map their backend models and frontend UI strictly to `./testing/data/data.json`. 
+3. **Local-First Architecture**: ALL infrastructure (UI, APIs) MUST run locally. The ONLY external dependency is the LLM via `GOOGLE_API_KEY`.
+4. **Zero-Cloud Persistence**: No Postgres. No Firebase. Use local JSON files for structured data to ensure instantaneous reads/writes during the demo.
+5. **Spectator Mode (LIVE VIBES)**: You are on stage. Use emojis (🚀, 🤖, ✨, 🧠), witty status updates, and visual terminal multiplexing (`tmux`). Make the build process look like an automated heist.
+6. **Speed is King (NO TESTS)**: Standard developer practices (Unit Tests, exhaustive TDD) are SUSPENDED. Do NOT write tests. If the endpoint returns valid JSON, it ships. Every second spent testing is a second lost. 🏎️💨
 
-## Data Persistence Protocol (JSON-First)
-To ensure zero-friction setup with an easy path to Firestore later, use this simple storage pattern in `bridge/main.py` or agent tools:
+---
+
+## 🛠️ The Hacker Vibe Pipeline
+The standard software development lifecycle has been compressed into four lightning-fast terminal commands. 
+
+| Command | Role | Output |
+| :--- | :--- | :--- |
+| **`/vibe-check`** | **Scope Definition** | 3 rapid-fire Yes/No questions to lock in the use case. Initializes the tracker. |
+| **`/blueprint`** | **Technical Skeleton** | Generates the ADK prompts, defines Deep Modules, and seeds the initial `data.json` payload. |
+| **`/chop-shop`** | **Task Slicing** | Breaks the blueprint into parallel `[FRONTEND]`, `[BACKEND]`, and `[ADK-INIT]` slices. |
+| **`/send-it`** | **Swarm Execution** | Ignites the `tmux` swarm, launching subagents in visible parallel panes while updating the Kanban board. |
+
+---
+
+## 🗄️ Data Persistence Protocol (JSON-First)
+To avoid setup friction and database migrations, use this strict local storage pattern. Subagents must target `./testing/data/data.json`.
 
 ```python
 import json
 import os
 from pathlib import Path
 
-DATA_FILE = "data.json"
-STORAGE_DIR = Path("storage")
-STORAGE_DIR.mkdir(exist_ok=True)
+DATA_FILE = Path("testing/data/data.json")
+DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
 
 def load_data():
-    if not os.path.exists(DATA_FILE):
-        return {"items": []}
+    if not DATA_FILE.exists():
+        return {}
     with open(DATA_FILE, "r") as f:
         return json.load(f)
 
 def save_data(data):
     with open(DATA_FILE, "w") as f:
         json.dump(data, f, indent=2)
-
-# File Storage Example
-def save_local_file(filename: str, content: bytes):
-    file_path = STORAGE_DIR / filename
-    file_path.write_bytes(content)
-    return str(file_path)
 ```
 
-## High-Velocity Setup Rules (Espresso Blitz)
+---
+
+## 🚦 Tmux Orchestration & State Safety
+To provide the visual spectacle of parallel agent execution without corrupting files, we use a **State Directory Pattern**.
+
+1. **The Rule:** Subagents (`vibe-ui-artist`, `vibe-adk-hacker`) are FORBIDDEN from writing directly to `.plans/KANBAN.md`. 
+2. **The Isolation:** Each `tmux` pane writes its status (`IN_PROGRESS`, `DONE`, `FAILED`) to its own isolated file in `.plans/swarm-state/<issue_id>.state`.
+3. **The Watcher:** The orchestrator automatically launches `watch-kanban.sh` in the background. This daemon aggregates the individual state files every 2 seconds and safely reconstructs the Mermaid Kanban board. This prevents read/write collisions while keeping the visual updates live for the audience.
+
+---
+
+## 🏎️ High-Velocity Setup Rules
 To ensure a "one-turn" success and avoid common infrastructure bottlenecks:
 
-1. **Dependency Force**: Always use `--index-url https://pypi.org/simple` when installing ADK or bridge dependencies to bypass internal/private registry resolution errors.
-2. **LLM Access**: Exclusively use `GOOGLE_API_KEY` (AI Studio) for ADK. Do NOT use Vertex AI to avoid IAM/403 friction.
-3. **Explicit Paths**: When spawning background services (Bridge/Playground), use absolute repository paths and explicit virtual environment binaries (e.g., `app/.venv/bin/python3`) to prevent environment mismatch.
-4. **Model Selection**: Use `gemini-3.1-pro` for planning (`to-prd`/`to-slices`) and `gemini-3.1-flash-lite` for implementation speed and visual reasoning.
-
-## Winning Plays: Kickoff vs. Blitz
-
-| Command | Strategy | Best For... |
-| :--- | :--- | :--- |
-| **`/vibe:kickoff`** | **Isolated Workers**: Spawns a separate tmux pane for scaffolding while you stay in your main chat. | Complex projects where you want a "clean" background worker to handle the heavy lifting. |
-| **`/vibe:blitz`** | **Parallel Design**: Runs a background shell script in *your current session* while you immediately start designing. | The 40-minute sprint where context switching is too expensive and you need the AI to stay in sync with your design. |
-
-### The Blitz Protocol (Turn 0 Infrastructure)
-1. Trigger `/vibe:blitz`.
-2. The background script (`blitz-bootstrap.sh`) builds the "Tracer Bullet" skeleton (React, FastAPI, ADK) and installs `npm`/`uv` dependencies.
-3. You and the AI immediately define the `PRD.md` and `data.json` schema.
-4. By the time the design is done, the infrastructure is warm. Use `/to-code` to push logic into the boilerplate.
-
-## Dependency Installation Helper
-* **Force Public Registry**:
-  `uv pip install --index-url https://pypi.org/simple google-adk fastapi uvicorn`
-
-## Background Service Orchestration
-* **Absolute Paths**: When spawning background processes (Bridge, ADK UI), always use absolute paths for the `PYTHONPATH` and the virtual environment binary.
-* **Line Buffering**: Use `stdbuf -oL -eL` to ensure logs are written to files immediately for troubleshooting.
-* **Example**:
-  `nohup PYTHONPATH=$(pwd) .venv/bin/python3 bridge/main.py > bridge.log 2>&1 &`
+*   **Dependency Force**: Always use `--index-url https://pypi.org/simple` when installing dependencies via `uv` or `pip` to bypass any internal registry timeouts.
+*   **LLM Access**: Exclusively use `GOOGLE_API_KEY` (AI Studio). Do NOT use Vertex AI to avoid IAM/403 friction on stage.
+*   **Agents CLI Context**: Subagents should utilize the bundled `/agents-cli-adk-code` skill context if they need to reference the exact ADK syntax.
+*   **Line Buffering**: When the orchestrator spawns background services, use `stdbuf -oL -eL` to ensure logs write instantly for live tailing.
