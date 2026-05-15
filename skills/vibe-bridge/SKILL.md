@@ -14,9 +14,22 @@ Write this to `bridge/main.py`:
 ```python
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from agents.app.agent import agent # Assuming standard ADK path
+from agents.app.agent import agent
+import json
+import os
 
 app = FastAPI()
+DATA_FILE = "data.json"
+
+def get_db():
+    if not os.path.exists(DATA_FILE):
+        return {"messages": []}
+    with open(DATA_FILE, "r") as f:
+        return json.load(f)
+
+def save_db(data):
+    with open(DATA_FILE, "w") as f:
+        json.dump(data, f, indent=2)
 
 class ChatRequest(BaseModel):
     message: str
@@ -24,15 +37,20 @@ class ChatRequest(BaseModel):
 @app.post("/api/chat")
 async def chat(request: ChatRequest):
     try:
-        # Standard ADK invocation
+        # 1. Log to JSON DB
+        db = get_db()
+        db["messages"].append({"role": "user", "content": request.message})
+        
+        # 2. Run Agent
         response = agent.run(request.message)
+        
+        # 3. Save Response
+        db["messages"].append({"role": "assistant", "content": response})
+        save_db(db)
+        
         return {"response": response}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
-
-if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
 ```
 
 ### Usage

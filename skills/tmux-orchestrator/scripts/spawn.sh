@@ -39,20 +39,11 @@ tmux set-option -w pane-border-format "#{?pane_active,#[fg=black,bg=cyan,bold],#
 tmux set-option -w pane-active-border-style "fg=cyan"
 tmux set-option -w pane-border-style "fg=white"
 
-# 2. Logic for Servers (Bottom, full-width, small height)
+# 2. Logic for Gemini Sessions (Right Column, Stacked)
 shopt -s nocasematch
 TYPE="other"
 TITLE="Task"
-if [[ "$COMMAND" =~ (server|dev|start|watch|bridge|uvicorn|fastapi|flask|node|npm|python|localhost) ]]; then
-    TYPE="server"
-    CLEAN_SRV=$(echo "$COMMAND" | sed -E 's/^(npm run|python -m|node)\s*//I')
-    TITLE="📡 $CLEAN_SRV"
-    # -d prevents focus shift
-    # -f -v ensures it spans the full window at the bottom
-    PANE_ID=$(tmux split-window -d -v -f -l 4 -P -F "#{pane_id}" -t "$MAIN_PANE")
-
-# 3. Logic for Gemini Sessions (Right Column, Stacked)
-elif [[ "$COMMAND" =~ gemini ]]; then
+if [[ "$COMMAND" =~ gemini ]]; then
     TYPE="gemini"
     
     # Inject YOLO mode for gemini sessions
@@ -64,7 +55,7 @@ elif [[ "$COMMAND" =~ gemini ]]; then
         fi
     fi
 
-    CLEAN_CMD=$(echo "$COMMAND" | sed -E 's/^gemini\s*//I' | sed -E 's/--yolo\s*//I' | sed -E 's/^["'\'']|["'\'']$//g' | xargs)
+    CLEAN_CMD=$(echo "$COMMAND" | sed -E 's/^gemini\s*//I' | sed -E 's/--yolo\s*//I' | sed -E 's/^["'\'']|["'\'']$//g' | sed -E 's/^[[:space:]]+|[[:space:]]+$//g')
     TITLE="🤖 ${CLEAN_CMD:-session}"
     
     LAST_GEMINI=$(tmux show-option -wv @last-gemini-pane-id 2>/dev/null)
@@ -80,6 +71,16 @@ elif [[ "$COMMAND" =~ gemini ]]; then
         PANE_ID=$(tmux split-window -d -v -P -F "#{pane_id}" -t "$LAST_GEMINI")
     fi
     tmux set-option -w @last-gemini-pane-id "$PANE_ID"
+
+# 3. Logic for Servers (Bottom, full-width, small height)
+elif [[ "$COMMAND" =~ (server|dev|start|watch|bridge|uvicorn|fastapi|flask|node|npm|python|localhost|blitz|bootstrap) ]]; then
+    TYPE="server"
+    CLEAN_SRV=$(echo "$COMMAND" | sed -E 's/^(npm run|python -m|node|\.\/skills\/vibe-blitz\/)\s*//I')
+    TITLE="📡 $CLEAN_SRV"
+    # -d prevents focus shift
+    # -f -v ensures it spans the full window at the bottom
+    # Default to 10 lines for servers
+    PANE_ID=$(tmux split-window -d -v -f -l 10 -P -F "#{pane_id}" -t "$MAIN_PANE")
 
 # 4. Default fallback
 else
@@ -100,4 +101,6 @@ if [ -n "$COMMAND" ]; then
 fi
 
 # Output the PANE_ID to stdout
+echo "$PANE_ID"
+utput the PANE_ID to stdout
 echo "$PANE_ID"

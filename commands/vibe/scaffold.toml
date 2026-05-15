@@ -1,19 +1,46 @@
-description = "Instantly bootstrap a functional Tracer Bullet using high-velocity rules."
-prompt = """
-We are performing an espresso blitz. Our goal is a functional "Tracer Bullet" (UI -> Bridge -> Gemini 3).
+description = "Bootstrap the project with ADK, Frontend, and Bridge using Vertex AI via a generalist subagent."
+prompt = """You are operating in **Scaffold Mode**. Your goal is to bootstrap a functional ADK agent and web frontend project using a **Monolithic One-Shot** approach to minimize latency and bypass environment bottlenecks.
 
-### Phase 1: High-Velocity Scaffolding
-Invoke a subagent to run the `scripts/setup_slice.sh` script. This script follows the **High-Velocity Setup Rules**:
-1. **Force Public Index**: Uses `--index-url https://pypi.org/simple`.
-2. **Explicit Paths**: Uses absolute repository paths for the bridge and virtual env.
-3. **Hybrid Ready**: Scaffolds a bridge that can toggle between Gemini API and Vertex AI.
+## Core Mandates
+1.  **One-Shot Execution**: Do NOT perform tasks turn-by-turn. Combine scaffolding, environment setup, file creation, and validation into a single chained shell command.
+2.  **Minimum Viable Environment (MVE)**: Install ONLY essential dependencies (`google-adk`, `fastapi`, `uvicorn`). Skip heavy extras like `[eval]` or `[lint]` for Slice 0.
+3.  **Zero-Trust Registry**: Pre-emptively force the public PyPI index for ALL commands using `export UV_INDEX_URL=https://pypi.org/simple` and `--index-url https://pypi.org/simple`.
+4.  **Auth Bridge Necessity**: The `get_manual_creds()` helper is **NON-NEGOTIABLE**. You must incorporate this exact snippet into `agent.py` to ensure the Python SDK respects the active `gcloud` session and avoids 403 errors:
+    ```python
+    def get_manual_creds():
+        import subprocess
+        from google.oauth2.credentials import Credentials
+        try:
+            token = subprocess.check_output(["gcloud", "auth", "print-access-token"]).decode("utf-8").strip()
+            return Credentials(token)
+        except Exception:
+            return None
+    ```
+5.  **SDK Directives**: 
+    - Use the `google.adk.runners.Runner` pattern for validation.
+    - Execute binaries directly from `.venv/bin/` to bypass CLI environment checks.
 
-### Phase 2: Orchestration (Post-Scaffold)
-Once scaffolding finishes, use the `tmux-orchestrator` skill to spawn:
-- **Bridge Server**: `./skills/tmux-orchestrator/scripts/spawn.sh "app/.venv/bin/python3 bridge/main.py"`
-- **Frontend UI**: `./skills/tmux-orchestrator/scripts/spawn.sh "cd frontend && npx serve ."`
-- **Agent Logs**: `./skills/tmux-orchestrator/scripts/spawn.sh "tail -f playground.log"`
+## Workflow
+### Phase 1: One-Shot Backend Implementation (via Generalist)
+Invoke the `generalist` subagent with a single, monolithic command (chained with `&&`) that performs the following:
+1.  **Scaffold**: `agents-cli scaffold create agent --agent adk --prototype`.
+2.  **Environment Setup**: `cd agent && uv venv && .venv/bin/pip install --index-url https://pypi.org/simple google-adk fastapi uvicorn`.
+3.  **Write Agent**: Use `cat <<EOF` to overwrite `app/agent.py` with the Vertex-enabled configuration and the **non-negotiable** `get_manual_creds()` helper.
+4.  **Write Test**: Use `cat <<EOF` to create `test_agent.py` using the `google.adk.runners.Runner` pattern.
+5.  **Strict Validation**: Run `.venv/bin/python test_agent.py` as a gatekeeper. **The command must fail here if validation fails.**
+6.  **Launch**: Only if validation passes, start the ADK Web UI using `nohup stdbuf -oL .venv/bin/adk web . --port 8080 > adk.log 2>&1 &`.
 
-### Phase 3: Verification
-Verify that Slice 0 is ready. Use `gemini-3-flash-preview` for the first verification turn.
+### Phase 2: Parallel Frontend Setup (via Frontend-Expert)
+In parallel with Phase 1, invoke the `frontend-expert` subagent to:
+1.  **Initialize**: Setup a React + Tailwind CSS project in the `frontend/` directory.
+2.  **Placeholder Page**: Create a modern, high-fidelity placeholder page in `src/App.tsx` that reflects the "Vibe" aesthetic.
+3.  **Launch**: Start the development server (e.g., Vite) in the background on port 3000.
+
+### Phase 3: Completion
+1.  Confirm that the `generalist` subagent successfully completed the validation gatekeeper.
+2.  Provide the access URLs: 
+    - **Agent UI**: `http://localhost:8080/dev-ui/?app=app`
+    - **Frontend**: `http://localhost:3000`
+3.  Summarize the validation output from `agent/adk.log`.
+
 """

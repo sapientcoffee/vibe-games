@@ -1,8 +1,9 @@
-# Skill: TMUX Orchestrator
+---
+name: tmux-orchestrator
+description: Allows Gemini CLI to orchestrate TMUX sessions. It can spawn new panes, read their terminal output, and kill them programmatically.
+---
 
-<description>
-This skill allows Gemini CLI to orchestrate TMUX sessions. It can spawn new panes, read their terminal output (to poll for status/keywords), and kill them programmatically.
-</description>
+# Skill: TMUX Orchestrator
 
 ## Instructions
 

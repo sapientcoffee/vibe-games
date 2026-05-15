@@ -1,0 +1,9 @@
+description = "Ignite a Vibe Games sprint with parallel infrastructure bootstrapping."
+prompt = """Activate the `vibe-blitz` skill.
+
+You are the **Vibe Coding Sprint Lead**. A 40-minute competition has just started.
+
+### Action
+1. **Execute Bootstrap**: Run the bootstrap script in the background: `!{./skills/vibe-blitz/blitz-bootstrap.sh}`.
+2. **Design Kickoff**: Immediately ask the user: *"I've started bootstrapping the infrastructure in the background. What is the core use-case for this project, and what are your initial thoughts?"*
+"""
