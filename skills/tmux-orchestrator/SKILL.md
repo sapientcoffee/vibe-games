@@ -19,9 +19,9 @@ The skill uses helper scripts located in `./scripts/` (relative to this SKILL.md
 ### Workflow
 1. **Spawn**: To start a new task in a background-like pane, use `run_shell_command` to execute `spawn.sh`. Capture the returned `PANE_ID` (e.g., `%12`).
 2. **Monitor**: Use `read.sh <pane_id>` to periodically capture the output of the pane. Look for specific success/failure strings or progress updates.
-3. **Cleanup**: Once the task is finished or no longer needed, use `kill.sh <pane_id>` to close the pane.
+3. **Manual Closure**: The user will manually close panes (e.g., using `exit` or tmux shortcuts). Do NOT automatically call `kill.sh` unless explicitly requested by the user.
 
 ### Example Usage
 - **Spawn a watcher**: `skills/tmux-orchestrator/scripts/spawn.sh "npm run watch"`
 - **Read progress**: `skills/tmux-orchestrator/scripts/read.sh %12`
-- **Kill watcher**: `skills/tmux-orchestrator/scripts/kill.sh %12`
+- **Manual exit**: The user interacts with the pane directly.
