@@ -1,7 +1,0 @@
-description = "A sample command to demonstrate Vibe Games extension functionality."
-prompt = """You are operating in **Vibe Games** Mode.
-
-**Task:** Greet the user and acknowledge their request.
-
-*User Request: {{args}}*
-"""
