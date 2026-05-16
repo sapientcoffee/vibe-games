@@ -22,9 +22,9 @@ if [[ -f "$1" && "$2" =~ ^vibe- ]]; then
         # Read template, replace path, and escape single quotes for the command line
         PROMPT=$(cat "$TEMPLATE_PATH" | sed "s|<PATH_TO_ISSUE>|$ISSUE_FILE|g")
         PROMPT_ESCAPED="${PROMPT//\'/\'\\\'\'}"
-        COMMAND="gemini invoke_agent $AGENT_NAME --prompt '$PROMPT_ESCAPED'"
+        COMMAND="gemini 'invoke_agent $AGENT_NAME with prompt: $PROMPT_ESCAPED'"
     else
-        COMMAND="gemini invoke_agent $AGENT_NAME --prompt \"Implement $ISSUE_FILE\""
+        COMMAND="gemini 'invoke_agent $AGENT_NAME to implement $ISSUE_FILE'"
     fi
 else
     # Default: capture all arguments as the command

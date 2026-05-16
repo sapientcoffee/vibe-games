@@ -21,7 +21,8 @@ A concise, 3-step description of the exact "happy path" we will show the judges.
 A complete, valid JSON object with 3 to 5 realistic mock records. Wrap it in a strict `json` block. This is the immutable schema for the swarm.
 
 ## 3. Deep Modules & Agent CLI Integration
-- **Framework:** The core agent MUST be scaffolded using the official Agents CLI. Use `./agent` directory. ALL backend logic must live inside this sandbox. Do not mix it with the frontend root.
+- **The Prompt:** Write a concise, 1-2 sentence declarative prompt formatted exactly like this: *"Use agents-cli to build me a [type of agent] that [fetches/reads X], [processes Y], and [outputs Z]."*
+- **Tools:** Define 2-3 specific tool functions it needs to interact with `./testing/data/data.json`.
 - **Model Enforcement (CRITICAL):** The ADK agent MUST be explicitly configured to use `gemini-3.1-flash`. Do not let it default to older deprecated models.
 - **Spectator Logging Protocol (CRITICAL):** Explicitly instruct the generated code to use these exact print statements with `flush=True` for maximum stage visibility. The subagents MUST implement these in their routes and tools:
   - `print("📥 [UI -> API] Received request payload: ...", flush=True)`
