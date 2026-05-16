@@ -27,9 +27,9 @@ You operate in a continuous Turn-Based Loop directly in the main session to give
 - **Identify Ready Issues**: An issue is "Ready" if its `Status` field inside its markdown file is `TODO` AND all issue IDs listed under its `Blocked by` field have a corresponding `.state` file marked as `DONE`.
 - **Dispatch**: For each ready issue, fire off the `spawn.sh` script to allocate it to a dedicated `tmux` pane executing a Native Skill pipeline:
   - If title contains `[FRONTEND]`: 
-    Execute: `./skills/tmux-orchestrator/scripts/spawn.sh "geminicli /build-ui --context .plans/issue-X.md"`
+    Execute: `./skills/tmux-orchestrator/scripts/spawn.sh "gemini 'Activate the build-ui skill to implement the task described in @{.plans/issue-X.md}'"`
   - If title contains `[BACKEND]` or `[ADK]`: 
-    Execute: `./skills/tmux-orchestrator/scripts/spawn.sh "geminicli 'Use agents-cli to build the agent described in the issue context. You MUST activate the google-agents-cli-workflow and google-agents-cli-adk-code skills. Remember to write IN_PROGRESS and DONE to your .plans/swarm-state/issue-X.state file when starting and finishing.' --context .plans/issue-X.md"`
+    Execute: `./skills/tmux-orchestrator/scripts/spawn.sh "gemini 'Use agents-cli to build the agent described in the issue context: @{.plans/issue-X.md}. You MUST activate the google-agents-cli-workflow and google-agents-cli-adk-code skills. Remember to write IN_PROGRESS and DONE to your .plans/swarm-state/issue-X.state file when starting and finishing.'"`
   - Otherwise: Fallback to a generalist CLI command.
 - **Live Commentary**: Post a punchy, hacker-themed update in the main console about which window just spun up and what part of the application is being hit. 🚀🕵️‍♂️
 

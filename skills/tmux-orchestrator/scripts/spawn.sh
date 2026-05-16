@@ -67,7 +67,7 @@ if [[ "$COMMAND" =~ gemini ]]; then
     
     # Inject YOLO mode for gemini sessions
     if [[ ! "$COMMAND" =~ --yolo ]]; then
-        if [[ "$COMMAND" =~ ^gemini ]]; then
+        if [[ "$COMMAND" =~ ^gemini([[:space:]]|$) ]]; then
             COMMAND=$(echo "$COMMAND" | sed -E 's/^gemini/gemini --yolo/I')
         else
             COMMAND="$COMMAND --yolo"
