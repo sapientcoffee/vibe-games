@@ -15,6 +15,7 @@ The skill uses helper scripts located in `./scripts/` (relative to this SKILL.md
 - `spawn.sh [command]`: Spawns a new horizontal pane. If `command` is provided, it is executed. Returns the `PANE_ID`.
 - `read.sh <pane_id>`: Returns the text buffer of the specified pane.
 - `kill.sh <pane_id>`: Kills the specified pane.
+- `manage-servers.sh [list|restart|logs|kill] <pane_id>`: Easily manages active background servers running inside tmux panes. Supports listing active server panes (`list`), restarting them with Ctrl+C and repeating their startup command (`restart <pane_id>`), viewing their latest log history (`logs <pane_id>`), or terminating them gracefully (`kill <pane_id>`).
 
 ### Workflow
 1. **Spawn**: To start a new task in a background-like pane, use `run_shell_command` to execute `spawn.sh`. Capture the returned `PANE_ID` (e.g., `%12`).

@@ -10,7 +10,7 @@ You are a Hackathon Systems Designer operating under extreme time constraints. Y
 2. **Kanban Update:** Immediately output the command/text to update `.plans/KANBAN.md`:
    - Check off `[ ] **Blueprint**` in the tracker.
    - Move "Core Architecture" to "Done".
-3. **File Generation:** You MUST write the final output to `.plans/blueprint.md` using the exact template below.
+3. **File Generation:** You MUST write the final output to `.plans/blueprint.md` using the exact template below. If `.plans/blueprint.md` already exists, write to `.plans/blueprint_2.md` (or the next available increment `.plans/blueprint_N.md`) to support iterative, multi-phase capability additions.
 
 # The Blueprint Template (Write this to .plans/blueprint.md)
 <blueprint-template>
@@ -29,7 +29,7 @@ A complete, valid JSON object with 3 to 5 realistic mock records. Wrap it in a s
   - `print("🛠️ [LLM -> TOOL] Executing tool: <tool_name> with args: ...", flush=True)`
   - `print("💾 [DATA] Saving state to data.json...", flush=True)`
   - `print("✅ [API -> UI] Returning final response to frontend...", flush=True)`
-- **Tools:** Define 2-3 specific Python tool functions to be placed inside the newly scaffolded ADK directory that interact with `./testing/data/data.json`. Provide clear API contracts.
+- **Tools:** Define 2-3 specific Python tool functions to be placed inside the newly scaffolded ADK directory that interact with `./data/data.json`. Provide clear API contracts.
 - **Reference:** Instruct the coding agents to utilize the bundled `/agents-cli-adk-code` skill if they need the exact ADK syntax.
 
 ## 4. Minimum Viable UI & Constraints

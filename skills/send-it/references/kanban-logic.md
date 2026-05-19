@@ -1,26 +1,27 @@
 # Kanban Generation Logic
 
-When generating or updating `.plans/KANBAN.md`, you MUST write the entire file as a single Mermaid code block. Do NOT use single-line formatting.
+When compiling or updating `.plans/KANBAN.md`, you MUST write the entire file as a single Mermaid code block using the standard `flowchart TD` syntax with subgraphs representing the lanes.
 
 ### Required File Content Template:
 ```mermaid
-kanban
-  Todo
-    BACKEND - 001-setup-bridge
-    FRONTEND - 002-setup-ui
-  In Progress
-    BACKEND - 003-data-schema
-  Done
+flowchart TD
+  subgraph Todo ["To Do"]
+    direction TB
+    issue-1(ADK-INIT - Scaffold Agent and Seed Data)
+    issue-2(ADK-LOGIC - Implement Stateless Retrieval)
+  end
+  subgraph InProgress ["In Progress"]
+    direction TB
+    issue-3(FRONTEND - Build Minimal UI)
+  end
+  subgraph Done ["Done"]
+    direction TB
     None
+  end
 ```
 
 ## Strict Formatting Rules
 1. **Block Markers**: The file MUST start with ` ```mermaid ` and end with ` ``` `.
-2. **Newlines**: Every column and every item MUST be on its own line.
-3. **No Brackets**: Do NOT use `[` or `]`. They are interpreted as shape delimiters and cause parse errors. Use `BACKEND -` or `FRONTEND -` instead.
-4. **No Quotes**: Do NOT use double quotes `"`. They can confuse the lexer in some versions of the kanban diagram.
-5. **Indentation**: 
-   - Column headers (e.g., `Todo`): 2 spaces.
-   - Items: 4 spaces.
-6. **Empty Columns**: If a column has no items, add a `None` placeholder.
-7. **Columns**: Use exactly `Todo`, `In Progress`, `Done`, and `Blocked/Failed`.
+2. **Subgraphs**: Use exactly `subgraph Todo ["To Do"]`, `subgraph InProgress ["In Progress"]`, and `subgraph Done ["Done"]`.
+3. **No Brackets inside Nodes**: Do NOT use `[` or `]` inside the node text (e.g. `issue-1(...)`), as it conflicts with Mermaid shape delimiters. Format tags as `TAG -` (e.g., `ADK-INIT -`).
+4. **Empty Columns**: If a column has no active issues, put a single node named `None` inside it (e.g., `None`).

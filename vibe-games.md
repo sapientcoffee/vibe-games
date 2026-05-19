@@ -5,7 +5,7 @@ This extension provides a ruthless, high-speed pipeline of specialized commands,
 ## ⚡ Core Mandates
 1. **The Agents CLI Advantage**: Never write boilerplate. Use `agents-cli create <name> --adk --yes` as the absolute first step for backend scaffolding.
 2. **Model Selection Strategy**: Exclusively use `gemini-2.5-flash` or `gemini-3.1-flash-lite` for initial prototyping. To prevent 404 rework, run a 30-second pre-flight check: `uv run --with google-genai python -c "import google.generativeai as genai; genai.configure(api_key='YOUR_KEY'); [print(m.name) for m in genai.list_models()]"`.
-3. **Data-First Execution**: The JSON schema generated in the Blueprint is the immutable law. Subagents must map their backend models and frontend UI strictly to `./testing/data/data.json`. 
+3. **Data-First Execution**: The JSON schema generated in the Blueprint is the immutable law. Subagents must map their backend models and frontend UI strictly to `./data/data.json`. 
 4. **Local-First Architecture**: ALL infrastructure (UI, APIs) MUST run locally. The ONLY external dependency is the LLM via `GOOGLE_API_KEY`.
 5. **Zero-Cloud Persistence**: No Postgres. No Firebase. Use local JSON files for structured data to ensure instantaneous reads/writes during the demo.
 6. **Spectator Mode (LIVE VIBES)**: You are on stage. Use emojis (🚀, 🤖, ✨, 🧠), witty status updates, and visual terminal multiplexing (`tmux`). Make the build process look like an automated heist.
@@ -27,7 +27,7 @@ The standard software development lifecycle has been compressed into four lightn
 ---
 
 ## 🗄️ Data Persistence Protocol (JSON-First)
-To avoid setup friction and database migrations, use this strict local storage pattern. Subagents must target `./testing/data/data.json` using absolute path resolution to ensure consistency.
+To avoid setup friction and database migrations, use this strict local storage pattern. Subagents must target `./data/data.json` using absolute path resolution to ensure consistency.
 
 ```python
 import json
@@ -36,7 +36,7 @@ from pathlib import Path
 
 # Explicitly define workspace root for consistent pathing
 WORKSPACE_ROOT = Path(os.getcwd())
-DATA_FILE = WORKSPACE_ROOT / "testing/data/data.json"
+DATA_FILE = WORKSPACE_ROOT / "data/data.json"
 DATA_FILE.parent.mkdir(parents=True, exist_ok=True)
 
 def load_data():

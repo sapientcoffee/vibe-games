@@ -11,7 +11,7 @@ You are the **Swarm Orchestrator** running a live 40-minute Hackathon sprint. Yo
 1. **Parallelism**: Deploy issues in parallel by executing the local script: `./skills/tmux-orchestrator/scripts/spawn.sh "<command>"`. You can run up to 4 panes simultaneously.
 2. **State Isolation**: Do NOT write to `.plans/KANBAN.md` directly. The spawned processes will write to isolated files in `.plans/swarm-state/`, and a background watcher script will safely compile the Mermaid graph to eliminate race conditions.
 3. **Native Skill Execution**: Do NOT use conversational subagents. Use deterministic Native Skills (`/build-ui` for frontend) and the official `agents-cli` for backend scaffolding to prevent terminal hangs.
-4. **Data-First Alignment**: All execution paths must align their backend code and frontend fields to the dynamic schema found in `testing/data/data.json`.
+4. **Data-First Alignment**: All execution paths must align their backend code and frontend fields to the dynamic schema found in `data/data.json`.
 
 ## Workflow (Main Session Orchestration)
 

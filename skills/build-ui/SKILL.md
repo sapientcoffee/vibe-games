@@ -11,7 +11,7 @@ description: A deterministic pipeline skill that reads an issue file, builds a s
    - Instead, immediately overwrite `frontend/index.html` to inject the Tailwind CDN directly into the `<head>`: `<script src="https://cdn.tailwindcss.com"></script>`
    - Use Tailwind utility classes for all styling. Do not write custom CSS.
 3. **Parallel Tolerance & Data Binding**: 
-   - Map all layout values directly to the schema in `../testing/data/data.json`.
+   - Map all layout values directly to the schema in `../data/data.json`.
    - **CRITICAL**: The backend API is being built in parallel and may not be bound to a port yet. You MUST write your fetch calls to handle network failures gracefully. If the backend is unreachable, simulate the API response with a 1-second delay using local state variables so the UI remains fully interactive on stage.
 4. **Spectator Component (LIVE VIBES)**: 
    - You MUST include a "Status" or "Live Log" visual component in the UI. When a user triggers an action, show a sleek loading state (e.g., "🧠 Agent is thinking...") to provide visual feedback while the background processes run.

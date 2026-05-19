@@ -28,6 +28,6 @@ Before asking any questions, you MUST create or overwrite `.plans/KANBAN.md` wit
 
 # Completion
 Once the user answers the final question:
-1. Create or update `.plan/CONTEXT.md` with the crystallised domain glossary.
+1. Create `.plans/CONTEXT.md` with the crystallised domain glossary. If `.plans/CONTEXT.md` already exists, create `.plans/CONTEXT_2.md` (or the next available increment `.plans/CONTEXT_N.md`) to preserve past phases.
 2. Output the final Context Payload in a `<context_payload>` XML block.
 3. Explicitly tell the user: "🟢 Vibe Check complete. Run `/blueprint` to generate the technical skeleton."
