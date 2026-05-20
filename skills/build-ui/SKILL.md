@@ -15,7 +15,14 @@ description: A deterministic pipeline skill that reads an issue file, builds a s
    - **CRITICAL**: The backend API is being built in parallel and may not be bound to a port yet. You MUST write your fetch calls to handle network failures gracefully. If the backend is unreachable, simulate the API response with a 1-second delay using local state variables so the UI remains fully interactive on stage.
 4. **Spectator Component (LIVE VIBES)**: 
    - You MUST include a "Status" or "Live Log" visual component in the UI. When a user triggers an action, show a sleek loading state (e.g., "🧠 Agent is thinking...") to provide visual feedback while the background processes run.
-5. **State Management (No Hangs)**: 
+5. **Web Server & Background Processes (No Hangs)**:
+   - **DO NOT** run persistent/interactive commands like `npm run dev` or `vite` in the foreground. If you do, your execution pane will hang indefinitely and you will fail to mark the task as complete.
+   - If you need to start the web server, you MUST spawn it as a background server in a separate tmux pane using the tmux orchestrator script:
+     `../skills/tmux-orchestrator/scripts/spawn.sh "npm --prefix frontend run dev"`
+     This allows the server to run in a dedicated pane while your task pane remains unblocked to complete its work and exit.
+   - Alternatively, you can run the server in the background using standard bash backgrounding (e.g., `npm --prefix frontend run dev &`), but spawning a separate pane via the script is highly preferred for audience visibility.
+
+6. **State Management (No Hangs)**: 
    - Immediately upon starting, run: `echo "IN_PROGRESS" > .plans/swarm-state/<issue_id>.state`
-   - When finished writing the code, run: `echo "DONE" > .plans/swarm-state/<issue_id>.state`
-6. **No Chatting**: Do not ask follow-up questions. Write the code, update the state file, and terminate.
+   - When finished writing the code and triggering any background servers, run: `echo "DONE" > .plans/swarm-state/<issue_id>.state`
+7. **No Chatting**: Do not ask follow-up questions. Write the code, update the state file, and terminate.

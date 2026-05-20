@@ -11,7 +11,7 @@ description: Allows Gemini CLI to orchestrate TMUX sessions. It can spawn new pa
 - **Strict Requirement**: You MUST be running within an active TMUX session to use this skill. Check for the `TMUX` environment variable if unsure.
 
 ### Helper Scripts
-The skill uses helper scripts located in `./scripts/` (relative to this SKILL.md):
+The skill uses helper scripts located in `scripts/`:
 - `spawn.sh [command]`: Spawns a new horizontal pane. If `command` is provided, it is executed. Returns the `PANE_ID`.
 - `read.sh <pane_id>`: Returns the text buffer of the specified pane.
 - `kill.sh <pane_id>`: Kills the specified pane.

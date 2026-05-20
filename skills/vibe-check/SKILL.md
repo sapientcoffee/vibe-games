@@ -22,9 +22,9 @@ Before asking any questions, you MUST create or overwrite `.plans/KANBAN.md` wit
 
 # Instructions
 1. **Explore First:** If a question can be answered by exploring the codebase, explore the codebase instead of asking the user.
-2. **Max 3 Questions:** Ask a MAXIMUM of 3 high-leverage questions (focusing on transactional flow, the core edge case, and UI requirements). Ask them one at a time.
-3. **Yes/No Defaults:** For every question, you MUST provide a sensible default recommendation so the user can simply reply "Yes" or course-correct. (e.g., "Should we use Streamlit for the UI? (Y/N)").
-4. **Domain Rigour:** If the user uses fuzzy language, propose a precise canonical term.
+2. **Questions:** Ask a MAXIMUM of 3-5 high-leverage questions (focusing on transactional flow, the core edge case, UI requirements, and the ADK orchestration/routing patterns: Coordinator/Specialist delegation vs Sequential pipeline vs Iterative Loop). Ask them one at a time.
+3. **Yes/No Defaults:** For every question, you MUST provide a sensible default recommendation so the user can simply reply "Yes" or course-correct. (e.g., "Should we use a Coordinator agent to delegate to Specialist agents? (Y/N)").
+4. **Domain Rigour:** If the user uses fuzzy language, propose a precise canonical term (such as Coordinator, Specialist, Loop Step, Evaluator).
 
 # Completion
 Once the user answers the final question:
