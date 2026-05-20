@@ -23,6 +23,7 @@ The standard software development lifecycle has been compressed into four lightn
 | **`/blueprint`** | **Technical Skeleton** | Generates the ADK prompts, defines Deep Modules, and seeds the initial `data.json` payload. |
 | **`/chop-shop`** | **Task Slicing** | Breaks the blueprint into parallel `[FRONTEND]`, `[BACKEND]`, and `[ADK-INIT]` slices. |
 | **`/send-it`** | **Swarm Execution** | Ignites the `tmux` swarm, launching subagents in visible parallel panes while updating the Kanban board. |
+| **`/vibe:walkthrough`** | **Walkthrough & Evidence** | Starts local servers, screenshots the happy path browser walk, audits emoji telemetry, and generates `06_WALKTHROUGH.md` before teardown. |
 
 ---
 

@@ -2,13 +2,13 @@
 
 A ruthless, high-velocity extension for the Gemini CLI, specifically optimized for building, validating, and demoing agentic prototypes in under 40 minutes for the **Vibe Games Competition**.
 
-This extension abandons traditional, bloated software development lifecycles in favor of a deterministic, 4-step terminal pipeline that launches a visually stunning `tmux` swarm of AI subagents.
+This extension abandons traditional, bloated software development lifecycles in favor of a deterministic, 5-step terminal pipeline that launches a visually stunning `tmux` swarm of AI subagents.
 
 ---
 
 ## 🏎️ The Winning Playbook: The Hacker Vibe Pipeline
 
-In a 40-minute live sprint, context switching is fatal. This pipeline replaces interactive manual scaffolding with a straight-line, data-first execution path.
+In a 40-minute live sprint, context switching is fatal. This pipeline replaces interactive manual scaffolding with a straight-line, data-first execution path starting with pre-flight automated ideation.
 
 ### The Swarm Architecture
 
@@ -19,8 +19,10 @@ sequenceDiagram
     participant FS as File System (.plans/ & data.json)
     participant Tmux as Tmux Swarm
     
+    User->>G: activate_skill ideator (Discovery)
+    G->>FS: Write CONTEXT_DRAFT.md
     User->>G: /vibe-check (Lock Scope)
-    G->>FS: Init KANBAN.md
+    G->>FS: Init KANBAN.md & CONTEXT.md
     User->>G: /blueprint (Skeleton & Data)
     G->>FS: Write blueprint.md & seed data.json
     User->>G: /chop-shop (Task Slicing)
@@ -38,10 +40,12 @@ sequenceDiagram
 
 ```mermaid
 graph LR
-    A[🏁 /vibe-check] -->|Scope Lock| B[🏗️ /blueprint]
+    Pre[💡 ideator] -->|Draft Context| A[🏁 /vibe-check]
+    A -->|Scope Lock| B[🏗️ /blueprint]
     B -->|Schema & Skeleton| C[🔪 /chop-shop]
     C -->|Task Slices| D[🚀 /send-it]
     D -->|TMUX Swarm| E{✨ PROTOTYPE}
+    style Pre fill:#fff2cc,stroke:#333,stroke-width:2px
     style A fill:#f9f,stroke:#333,stroke-width:2px
     style B fill:#bbf,stroke:#333,stroke-width:2px
     style C fill:#bfb,stroke:#333,stroke-width:2px
@@ -51,12 +55,17 @@ graph LR
 
 ---
 
-## 🔥 The 4 Core Commands
+## 🔥 The Pipeline Commands
+
+### 0. `ideator` Skill (Pre-Flight Discovery)
+Deconstructs any raw product or hackathon prompt into structured ideas.
+*   **Action:** Dynamically researches domain friction points, designs target personas, details high-impact Customer User Journeys (CUJs), aligns with ADK topologies, and drafts a mock `data.json` schema.
+*   **Result:** Outputs `.plans/CONTEXT_DRAFT.md` to feed into the `/vibe-check` process, allowing for 100% future-proof, generic ideation on any prompt.
 
 ### 1. `/vibe-check` (The Pit Stop)
 Rapid-fire Hackathon Q&A to nail down the core demo scope.
-*   **Action:** Asks a strict maximum of 3 Yes/No default questions to lock in the transactional flow and edge cases.
-*   **Result:** Outputs the context payload and initializes the `KANBAN.md` tracker.
+*   **Action:** Reads `.plans/CONTEXT_DRAFT.md`, asks a strict maximum of 3-5 Yes/No default questions to choose, refine, and lock in the transactional flow and edge cases.
+*   **Result:** Outputs the final context payload (`CONTEXT.md`) and initializes the `KANBAN.md` tracker.
 
 ### 2. `/blueprint` (The Spellbook)
 Converts the raw vibe-check context into a strict Technical Skeleton.
