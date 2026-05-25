@@ -462,11 +462,11 @@
             <div>
               <div class="slanted-badge">ADK Orchestration</div>
               <p style="font-size: 0.9rem; margin-bottom: 15px;">
-                <strong>Coordinator-Specialist Topology:</strong> A master orchestrator agent dispatches specialized subagents based on real-time classroom telemetry and student needs.
+                <strong>Coordinator-Specialist Topology:</strong> A primary orchestrator agent dispatches specialized subagents based on real-time classroom telemetry and student needs.
               </p>
               <div class="cyber-card active">
                 <ul class="cyber-list" style="font-size: 0.75rem;">
-                  <li><strong>Curriculum Coordinator (Master):</strong> Intercepts raw student quest submissions, assesses current state against Alberta curriculum guidelines, and routes logic.</li>
+                  <li><strong>Curriculum Coordinator (Primary):</strong> Intercepts raw student quest submissions, assesses current state against Alberta curriculum guidelines, and routes logic.</li>
                   <li><strong>ADHD Specialist:</strong> Adapts concepts into highly visual, gamified quest micro-steps with constant positive reinforcement.</li>
                   <li><strong>ESL Specialist:</strong> Translates academic terms, simplifies vocabulary complexity, and scaffolds reading exercises.</li>
                   <li><strong>Gifted Coach:</strong> Pushes students deeper with conceptual inquiry, advanced socratic questions, and open-ended research prompts.</li>
@@ -561,7 +561,7 @@
             <div style="line-height: 1.5; color: #fff;">
               📥 <span style="color: #06b6d4;">[UI -> API]</span> Received quest input: "We should vote together in the assembly" from Leo<br>
               🧠 <span style="color: #a855f7;">[API -> LLM]</span> Invoking Gemini SocraticCoach Agent (LoopAgent)...<br>
-              🛠️ <span style="color: #eab308;">[LLM -> TOOL]</span> submit_quest_attempt_tool() executed with mastery_achieved=True<br>
+              🛠️ <span style="color: #eab308;">[LLM -> TOOL]</span> submit_quest_attempt_tool() executed with quest_completed=True<br>
               💾 <span style="color: #3b82f6;">[DATA]</span> Updated +25 Vibe Points & unlocked "Archon of Athens" Badge<br>
               ✅ <span style="color: #10b981;">[API -> UI]</span> Returned success payload & triggered UI confetti stream.
             </div>
