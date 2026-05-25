@@ -10,7 +10,7 @@ This extension abandons traditional, bloated software development lifecycles in 
 
 The project includes a stunning, local-first interactive presentation showcasing the development process, architecture, and live demo trace of **ClassVibe AI**.
 
-👉 **[Launch the Reveal.js Presentation (index.html)](./index.html)** *(Simply open `index.html` in your browser to view)*
+👉 **[Launch the Live Presentation](https://sapientcoffee.github.io/vibe-games/)** *(Or open [index.html](./index.html) locally)*
 
 ![Vibe Games Presentation Theme](assets/screenshot-theme.png)
 
