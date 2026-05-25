@@ -1,0 +1,668 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>Vibe Games - ClassVibe AI Presentation</title>
+
+    <meta name="description" content="ClassVibe AI — Alberta Classroom AI Co-Pilot developed in the Vibe Games.">
+    <meta name="author" content="Rob Edwards (Cognitive Brewer)">
+
+    <!-- Reveal.js Base and Reset CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css">
+
+    <!-- Premium Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+    <!-- Bespoke Cyberpunk/Hacker Vibe Stylesheet -->
+    <style>
+      :root {
+        --color-bg: #0b0d0e;
+        --color-card-bg: #121516;
+        --color-panel-bg: rgba(18, 21, 22, 0.8);
+        --color-accent: #a3e635; /* Neon/Lime Green */
+        --color-accent-dim: rgba(163, 230, 53, 0.15);
+        --color-text-main: #f4f4f5; /* Off-White */
+        --color-text-dim: #94a3b8; /* Muted Slate */
+        --color-silver: #d1d5db;
+        --font-header: 'Share Tech Mono', monospace;
+        --font-body: 'Outfit', sans-serif;
+      }
+
+      /* Base Overrides */
+      .reveal {
+        background-color: var(--color-bg) !important;
+        font-family: var(--font-body) !important;
+        color: var(--color-text-main) !important;
+      }
+
+      .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
+        font-family: var(--font-header) !important;
+        color: var(--color-text-main) !important;
+        text-transform: uppercase !important;
+        letter-spacing: 0.05em !important;
+        margin: 0 !important;
+        padding: 0 !important;
+      }
+
+      .reveal h1 {
+        font-size: 2.8rem !important;
+        line-height: 1.1 !important;
+        text-shadow: 0 0 20px var(--color-accent-dim);
+      }
+
+      .reveal h2 {
+        font-size: 2.2rem !important;
+        border-bottom: 2px solid var(--color-accent);
+        padding-bottom: 0.3rem !important;
+        margin-bottom: 1.5rem !important;
+        display: inline-block;
+      }
+
+      .reveal p {
+        font-family: var(--font-body);
+        font-weight: 300;
+        color: var(--color-text-dim);
+        line-height: 1.5;
+      }
+
+      .reveal .slides section {
+        text-align: left;
+        padding: 20px 40px !important;
+      }
+
+      /* Custom Layouts & Components */
+      .grid-2 {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        align-items: center;
+      }
+
+      .grid-3 {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 20px;
+      }
+
+      /* Cyberpunk Card Component */
+      .cyber-card {
+        background: var(--color-card-bg);
+        border: 1px solid var(--color-accent-dim);
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+        padding: 25px;
+        border-radius: 4px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      /* Notch Corners */
+      .cyber-card::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        border-top: 12px solid var(--color-accent);
+        border-left: 12px solid transparent;
+        width: 0;
+      }
+
+      .cyber-card.active {
+        border-color: var(--color-accent);
+        box-shadow: 0 0 20px var(--color-accent-dim);
+      }
+
+      /* Slanted Badges (Matches ROB EDWARDS card tag) */
+      .slanted-badge {
+        background: var(--color-accent);
+        color: var(--color-bg) !important;
+        font-family: var(--font-header);
+        font-weight: 800;
+        text-transform: uppercase;
+        padding: 4px 15px;
+        transform: skewX(-12deg);
+        display: inline-block;
+        margin-bottom: 15px;
+        font-size: 0.9rem;
+      }
+
+      .slanted-badge-dark {
+        background: #1e293b;
+        color: var(--color-accent) !important;
+        font-family: var(--font-header);
+        padding: 4px 15px;
+        transform: skewX(-12deg);
+        display: inline-block;
+        margin-bottom: 15px;
+        font-size: 0.9rem;
+        border: 1px solid var(--color-accent);
+      }
+
+      /* Trading Card Embed Layout */
+      .trading-card-frame {
+        border: 2px solid var(--color-accent-dim);
+        border-radius: 8px;
+        padding: 5px;
+        background: #111;
+        box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+        transition: all 0.3s ease;
+        max-width: 320px;
+        margin: 0 auto;
+      }
+
+      .trading-card-frame:hover {
+        border-color: var(--color-accent);
+        box-shadow: 0 0 40px var(--color-accent-dim);
+      }
+
+      .trading-card-img {
+        width: 100%;
+        border-radius: 4px;
+        display: block;
+      }
+
+      /* Steps Flow (Hacker Pipeline) */
+      .pipeline-container {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        margin-top: 20px;
+      }
+
+      .pipeline-step {
+        display: flex;
+        align-items: center;
+        background: var(--color-card-bg);
+        border: 1px solid var(--color-accent-dim);
+        padding: 12px 20px;
+        border-radius: 4px;
+        position: relative;
+      }
+
+      .pipeline-step::before {
+        content: '';
+        width: 4px;
+        height: 100%;
+        background: var(--color-accent);
+        position: absolute;
+        left: 0;
+        top: 0;
+      }
+
+      .pipeline-step-num {
+        font-family: var(--font-header);
+        font-size: 1.5rem;
+        color: var(--color-accent);
+        font-weight: bold;
+        width: 50px;
+        flex-shrink: 0;
+      }
+
+      .pipeline-step-details h4 {
+        font-size: 1.1rem !important;
+        margin-bottom: 2px !important;
+      }
+
+      .pipeline-step-details p {
+        font-size: 0.85rem !important;
+        margin: 0 !important;
+      }
+
+      /* Custom list styling */
+      ul.cyber-list {
+        list-style: none;
+        padding-left: 0;
+        margin: 0;
+      }
+
+      ul.cyber-list li {
+        position: relative;
+        padding-left: 25px;
+        margin-bottom: 12px;
+        font-size: 0.95rem;
+        font-weight: 300;
+        color: var(--color-text-dim);
+      }
+
+      ul.cyber-list li strong {
+        color: var(--color-text-main);
+        font-weight: 600;
+      }
+
+      ul.cyber-list li::before {
+        content: '■';
+        position: absolute;
+        left: 0;
+        top: 0;
+        color: var(--color-accent);
+        font-size: 0.8rem;
+      }
+
+      /* Navigation Customization */
+      .reveal .controls {
+        color: var(--color-accent) !important;
+      }
+
+      .reveal .progress {
+        background: rgba(255, 255, 255, 0.1) !important;
+        height: 5px !important;
+      }
+
+      .reveal .progress span {
+        background: var(--color-accent) !important;
+      }
+
+      /* Live Interactive Buttons */
+      .btn-cyber {
+        background: var(--color-accent);
+        color: var(--color-bg) !important;
+        font-family: var(--font-header);
+        font-weight: bold;
+        padding: 12px 25px;
+        border-radius: 4px;
+        text-transform: uppercase;
+        display: inline-block;
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 0 15px var(--color-accent-dim);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        text-align: center;
+      }
+
+      .btn-cyber:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 25px var(--color-accent);
+      }
+
+      .btn-cyber-outline {
+        background: transparent;
+        color: var(--color-accent) !important;
+        font-family: var(--font-header);
+        font-weight: bold;
+        padding: 10px 23px;
+        border-radius: 4px;
+        text-transform: uppercase;
+        display: inline-block;
+        border: 1px solid var(--color-accent);
+        transition: all 0.3s ease;
+        text-decoration: none;
+        text-align: center;
+      }
+
+      .btn-cyber-outline:hover {
+        background: var(--color-accent-dim);
+        transform: translateY(-2px);
+      }
+
+      /* Glow Effects */
+      .glow-text {
+        text-shadow: 0 0 10px var(--color-accent);
+      }
+
+      .highlight {
+        color: var(--color-accent);
+      }
+
+      /* Custom Slide Classes */
+      .slide-layout-center {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center !important;
+        height: 100%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        
+        <!-- SLIDE 1: Title Slide (Theme: Developer Trading Card) -->
+        <section data-transition="zoom">
+          <div class="grid-2" style="height: 100%;">
+            <div>
+              <div class="slanted-badge">Vibe Games Showcase</div>
+              <h1 class="glow-text">Hacking <span class="highlight">ClassVibe AI</span></h1>
+              <p style="margin-top: 10px; font-size: 1.2rem; color: var(--color-accent); font-family: var(--font-header);">
+                Building a High-Fidelity Education Co-Pilot in 40 Mins with GeminiCLI
+              </p>
+              <p style="margin-top: 10px; font-size: 0.95rem;">
+                A high-fidelity, local-first interactive educational co-pilot. Scaffolded, built, and fully wired live on clean machines using the custom GeminiCLI speed extension.
+              </p>
+              <div style="margin-top: 25px; font-family: var(--font-header); font-size: 0.9rem; color: var(--color-silver);">
+                🤖 ARCHITECT: <span class="highlight">ROB EDWARDS</span> (COGNITIVE BREWER)<br>
+                🧬 COMPETITOR 01: GOOGLE REPRESENTATIVE<br>
+                🏢 PARTNERS: <span style="color: #34a853; font-weight: bold;">GOV OF ALBERTA</span> · <span style="color: #4285f4; font-weight: bold;">GOOGLE</span> · <span style="color: #ea4335; font-weight: bold;">DELOITTE</span>
+              </div>
+            </div>
+            <div>
+              <div class="trading-card-frame">
+                <img src="./assets/screenshot-theme.png" alt="Rob Edwards Card" class="trading-card-img">
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SLIDE 2: Genesis - Bean-to-Cup to Hack-Speed -->
+        <section data-transition="slide-in fade-out">
+          <h2>The Genesis Story</h2>
+          <div class="grid-2">
+            <div>
+              <div class="slanted-badge">Origin: Bean-to-Cup</div>
+              <p style="font-size: 0.95rem; margin-bottom: 15px;">
+                My enterprise-focused framework, <strong class="highlight"><a href="https://github.com/sapientcoffee/bean-to-cup" target="_blank" style="color: var(--color-accent);">bean-to-cup</a></strong>, was built for robust, complete enterprise agent orchestration and workspace isolation.
+              </p>
+              <p style="font-size: 0.95rem;">
+                But when faced with <strong>freshly installed machines</strong> and a tight <strong>40-minute demo window</strong>, enterprise-grade overhead was a luxury I couldn't afford.
+              </p>
+            </div>
+            <div class="cyber-card active">
+              <h3 style="font-size: 1.3rem; margin-bottom: 12px !important; color: var(--color-accent);">The Vibe Games Solution</h3>
+              <p style="font-size: 0.85rem; line-height: 1.4; color: var(--color-text-main); margin-bottom: 12px;">
+                I built a specialized <strong>GeminiCLI extension</strong>—a ruthlessly streamlined spin-off focused on raw speed.
+              </p>
+              <ul class="cyber-list">
+                <li><strong>Rapid Setup:</strong> Bootstraps code harnesses on clean machines in seconds.</li>
+                <li><strong>Instant Skill Install:</strong> Seamlessly injects predefined <a href="https://github.com/sapientcoffee/vibe-games/tree/main/skills" target="_blank" style="color: var(--color-accent); text-decoration: underline;">custom skills</a>.</li>
+                <li><strong>Zero Friction:</strong> Eliminates setup, databases, and configuration lag.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- SLIDE 3: The Hacker Pipeline Flow (The 4-Step Dev Engine) -->
+        <section data-transition="slide">
+          <h2>The Hacker Pipeline</h2>
+          <p style="font-size: 0.95rem; margin-bottom: 20px;">
+            My extension skills and workflow were designed specifically to <strong>drive the agents</strong> in the right direction and <strong>mitigate distracting crowd noise</strong>.
+          </p>
+          <div class="pipeline-container">
+            <div class="pipeline-step">
+              <div class="pipeline-step-num">01</div>
+              <div class="pipeline-step-details">
+                <h4><a href="https://github.com/sapientcoffee/vibe-games/tree/main/skills/vibe-check" target="_blank" style="color: var(--color-accent); text-decoration: underline;">/vibe-check</a> — Friction Mining & Scope Lock</h4>
+                <p>Instead of letting the agent wander, it runs 3 targeted Q&As to surface top use-case friction points and immediately locks down the <strong>Critical User Journey (CUJ)</strong>.</p>
+              </div>
+            </div>
+            <div class="pipeline-step">
+              <div class="pipeline-step-num">02</div>
+              <div class="pipeline-step-details">
+                <h4><a href="https://github.com/sapientcoffee/vibe-games/tree/main/skills/blueprint" target="_blank" style="color: var(--color-accent); text-decoration: underline;">/blueprint</a> — Strict Schema Rigor</h4>
+                <p>Formulates the database schema (`data.json`) and agent structures strictly around the discovered CUJ. Prevents the agent from getting side-tracked by non-essential features ("crowd noise").</p>
+              </div>
+            </div>
+            <div class="pipeline-step">
+              <div class="pipeline-step-num">03</div>
+              <div class="pipeline-step-details">
+                <h4><a href="https://github.com/sapientcoffee/vibe-games/tree/main/skills/chop-shop" target="_blank" style="color: var(--color-accent); text-decoration: underline;">/chop-shop</a> — Independent Task Isolation</h4>
+                <p>Slices the technical blueprint into completely isolated, modular files (Frontend, Backend, ADK-init) so parallel subagents don't step on each other's toes.</p>
+              </div>
+            </div>
+            <div class="pipeline-step">
+              <div class="pipeline-step-num">04</div>
+              <div class="pipeline-step-details">
+                <h4><a href="https://github.com/sapientcoffee/vibe-games/tree/main/skills/send-it" target="_blank" style="color: var(--color-accent); text-decoration: underline;">/send-it</a> — Parallel TMUX Dispatching</h4>
+                <p>Programmatically spawns parallel, isolated subagents inside separate, visible TMUX panes. Each subagent focuses 100% on implementing its design slice with zero lateral distractions.</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SLIDE 4: The 40-Minute Arena (Classroom Focus) -->
+        <section data-transition="slide">
+          <h2>The 40-Minute Arena</h2>
+          <p style="font-size: 0.95rem; margin-bottom: 25px;">
+            The Hackathon featured an audience vote on 3 unique use cases. I aligned my build pipeline to solve <strong>Use Case 3: Education Reimagined</strong>—supporting diverse student needs in Alberta classrooms.
+          </p>
+          <div class="grid-3">
+            <div class="cyber-card">
+              <div class="slanted-badge-dark" style="font-size: 0.75rem;">Use Case 1</div>
+              <h4 style="font-size: 1.1rem; color: var(--color-accent); margin-bottom: 8px !important;">Gov Application</h4>
+              <p style="font-size: 0.8rem; line-height: 1.4; color: var(--color-text-dim);">
+                Ingest benefits or license applications, validate completeness, auto-detect gaps, and route to reviewers.
+              </p>
+            </div>
+            <div class="cyber-card">
+              <div class="slanted-badge-dark" style="font-size: 0.75rem;">Use Case 2</div>
+              <h4 style="font-size: 1.1rem; color: var(--color-accent); margin-bottom: 8px !important;">IT Service desk</h4>
+              <p style="font-size: 0.8rem; line-height: 1.4; color: var(--color-text-dim);">
+                Act as first responder: classify tickets, automatically resolve routine issues, and compile escalation summaries.
+              </p>
+            </div>
+            <div class="cyber-card active">
+              <div class="slanted-badge" style="font-size: 0.75rem; color: var(--color-bg) !important;">Use Case 3</div>
+              <h4 style="font-size: 1.1rem; color: var(--color-text-main); margin-bottom: 8px !important;">Education AI</h4>
+              <p style="font-size: 0.8rem; line-height: 1.4; color: var(--color-text-main);">
+                Assess diverse learning needs in crowded Alberta classrooms, personalize student learning, and scale teacher impact.
+              </p>
+            </div>
+          </div>
+          <p style="font-size: 0.85rem; margin-top: 20px; color: var(--color-accent); font-family: var(--font-header);">
+            🚀 CLASSVIBE AI ANSWERED THE CALL: Conceived, scaffolded, built, and fully wired within the 40-minute window using our pipeline.
+          </p>
+        </section>
+
+        <!-- SLIDE 5: Agentic Architecture & Orchestration Flow -->
+        <section data-transition="slide-in fade-out">
+          <h2>Agentic Architecture & Flow</h2>
+          <div class="grid-2">
+            <div>
+              <div class="slanted-badge">ADK Orchestration</div>
+              <p style="font-size: 0.9rem; margin-bottom: 15px;">
+                <strong>Coordinator-Specialist Topology:</strong> A master orchestrator agent dispatches specialized subagents based on real-time classroom telemetry and student needs.
+              </p>
+              <div class="cyber-card active">
+                <ul class="cyber-list" style="font-size: 0.75rem;">
+                  <li><strong>Curriculum Coordinator (Master):</strong> Intercepts raw student quest submissions, assesses current state against Alberta curriculum guidelines, and routes logic.</li>
+                  <li><strong>ADHD Specialist:</strong> Adapts concepts into highly visual, gamified quest micro-steps with constant positive reinforcement.</li>
+                  <li><strong>ESL Specialist:</strong> Translates academic terms, simplifies vocabulary complexity, and scaffolds reading exercises.</li>
+                  <li><strong>Gifted Coach:</strong> Pushes students deeper with conceptual inquiry, advanced socratic questions, and open-ended research prompts.</li>
+                </ul>
+              </div>
+            </div>
+            <div>
+              <div class="trading-card-frame" style="max-width: 100%; border-color: var(--color-accent);">
+                <img src="./assets/classvibe_agent_architecture.png" alt="ClassVibe Agent Architecture" class="trading-card-img" style="border-radius: 4px; box-shadow: 0 0 20px rgba(163, 230, 53, 0.3);">
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SLIDE 6: Core Portals & Capabilities -->
+        <section data-transition="slide">
+          <h2>Core Capabilities</h2>
+          <div class="grid-3">
+            <div class="cyber-card active">
+              <h4 style="font-size: 1.1rem; color: var(--color-accent); margin-bottom: 10px !important;">Teacher Studio</h4>
+              <p style="font-size: 0.75rem; line-height: 1.4; color: var(--color-text-dim); margin-bottom: 10px;">
+                Curriculum Coordinator orchestrates three dedicated adaptation specialists:
+              </p>
+              <ul style="font-size: 0.7rem; padding-left: 10px; color: var(--color-text-main);">
+                <li>⚡ <strong>ADHD</strong>: Visual, micro-challenges & emojis.</li>
+                <li>🌍 <strong>ESL</strong>: Simplified lexicon & pronunciation.</li>
+                <li>🧠 <strong>Gifted</strong>: Inquiry-based conceptual depth.</li>
+              </ul>
+            </div>
+            <div class="cyber-card">
+              <h4 style="font-size: 1.1rem; color: var(--color-accent); margin-bottom: 10px !important;">Student Console</h4>
+              <p style="font-size: 0.75rem; line-height: 1.4; color: var(--color-text-dim); margin-bottom: 10px;">
+                Gamified quest loops (e.g. *Athenian Assembly*):
+              </p>
+              <ul style="font-size: 0.7rem; padding-left: 10px; color: var(--color-text-main);">
+                <li>💬 <strong>Socratic Coach:</strong> Guided reasoning prompts, no "spoiled" answers.</li>
+                <li>🏆 <strong>Vibe Points:</strong> Live engagement meters.</li>
+                <li>🎖️ <strong>Badges:</strong> Archon of Athens & Philosopher King unlocks.</li>
+              </ul>
+            </div>
+            <div class="cyber-card">
+              <h4 style="font-size: 1.1rem; color: var(--color-accent); margin-bottom: 10px !important;">Parent Portal</h4>
+              <p style="font-size: 0.75rem; line-height: 1.4; color: var(--color-text-dim); margin-bottom: 10px;">
+                Home-school pedagogical bridge:
+              </p>
+              <ul style="font-size: 0.7rem; padding-left: 10px; color: var(--color-text-main);">
+                <li>📅 <strong>Weekly Roadmaps:</strong> Profile-tailored tips.</li>
+                <li>🗣️ <strong>Advice Coach:</strong> Chat client connected directly to student profiles.</li>
+                <li>🌟 <strong>Approvals:</strong> Signed off homework adds +20 Vibe Points instantly.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- SLIDE 7: Zero-Cloud local-first Architecture -->
+        <section data-transition="slide-in fade-out">
+          <h2>Zero-Cloud Architecture</h2>
+          <div class="grid-2">
+            <div>
+              <div class="slanted-badge-dark">ClassVibe AI Tech Stack</div>
+              <p style="font-size: 0.95rem; margin-bottom: 20px;">
+                Built strictly with local execution, bypassing internet latency, database provisioning, and security friction during on-stage deployment.
+              </p>
+              <div class="cyber-card">
+                <h4 style="font-size: 1.1rem; color: var(--color-accent); margin-bottom: 10px !important;">Database-in-a-File</h4>
+                <p style="font-size: 0.8rem; line-height: 1.4; color: var(--color-text-dim);">
+                  All student profiles (Leo, Amina, Chloe), curriculum plans, quest metrics, and weekly roadmaps are kept inside a single, local, read-write-optimized <code>data/data.json</code> file.
+                </p>
+              </div>
+            </div>
+            <div>
+              <div class="cyber-card active">
+                <h3 style="font-size: 1.3rem; margin-bottom: 15px !important; color: var(--color-accent);">Topology Map</h3>
+                <ul class="cyber-list">
+                  <li><strong>Frontend (Port 5173):</strong> Single-Page React (Vite) + Tailwind CSS dashboard with responsive theme support.</li>
+                  <li><strong>Backend (Port 18080):</strong> FastAPI backend integrating ADK agent runners and telemetry handlers.</li>
+                  <li><strong>Core LLM:</strong> <code>gemini-3.5-flash</code> (Newly announced!) bound using Google AI Studio API key.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SLIDE 8: Live Spectator Telemetry -->
+        <section data-transition="slide">
+          <h2>Live Spectator Telemetry</h2>
+          <p style="font-size: 0.95rem; margin-bottom: 20px;">
+            A key Vibe Games requirement: live, interactive telemetry streamed directly into the dashboard. I engineered compliant ADK logging callbacks to make the agentic processes visible and "alive" for the audience:
+          </p>
+          <div class="cyber-card active" style="font-family: var(--font-header); font-size: 0.9rem; background: #000; border-color: var(--color-accent);">
+            <div style="color: var(--color-accent); margin-bottom: 10px; font-weight: bold; font-size: 1rem;">[CONSOLE OUTPUT - TRACER STREAM]</div>
+            <div style="line-height: 1.5; color: #fff;">
+              📥 <span style="color: #06b6d4;">[UI -> API]</span> Received quest input: "We should vote together in the assembly" from Leo<br>
+              🧠 <span style="color: #a855f7;">[API -> LLM]</span> Invoking Gemini SocraticCoach Agent (LoopAgent)...<br>
+              🛠️ <span style="color: #eab308;">[LLM -> TOOL]</span> submit_quest_attempt_tool() executed with mastery_achieved=True<br>
+              💾 <span style="color: #3b82f6;">[DATA]</span> Updated +25 Vibe Points & unlocked "Archon of Athens" Badge<br>
+              ✅ <span style="color: #10b981;">[API -> UI]</span> Returned success payload & triggered UI confetti stream.
+            </div>
+          </div>
+          <p style="font-size: 0.85rem; margin-top: 15px; color: var(--color-text-dim);">
+            Each state mutation outputs real-time feedback with unbuffered stdout logs (`flush=True`) for instant audience tracking.
+          </p>
+        </section>
+
+        <!-- SLIDE 9: Why GeminiCLI (Terminal-First & Multiplexing Swarms) -->
+        <section data-transition="slide">
+          <h2>Why GeminiCLI?</h2>
+          <div class="grid-2">
+            <div class="cyber-card active" style="height: 100%;">
+              <div class="slanted-badge">Terminal Control</div>
+              <h3 style="font-size: 1.3rem; margin-bottom: 15px !important; color: var(--color-accent);">Developer Preference</h3>
+              <p style="font-size: 0.85rem; color: var(--color-text-main); margin-bottom: 10px;">
+                <strong>Absolute Workflow Sovereignty:</strong> Preferring terminal-first environments grants complete control to configure code harnesses and scaffoldings in a way that matches rapid dev loops.
+              </p>
+              <ul class="cyber-list" style="font-size: 0.75rem;">
+                <li><strong>No UI Lag:</strong> Command line automation bypasses heavy IDE layouts.</li>
+                <li><strong>Fast Scaffolding:</strong> Trigger ADK structures instantly.</li>
+                <li><strong>Extreme Modularity:</strong> Easily bind model logic to custom pipeline scripts.</li>
+              </ul>
+            </div>
+            <div class="cyber-card" style="height: 100%;">
+              <div class="slanted-badge">TMUX Multiplexing</div>
+              <h3 style="font-size: 1.3rem; margin-bottom: 15px !important; color: var(--color-accent);">Visual Spectacle</h3>
+              <p style="font-size: 0.85rem; color: var(--color-text-main); margin-bottom: 10px;">
+                <strong>Parallel Swarm Execution:</strong> Instead of hiding tasks in silent threads, I use <strong>TMUX</strong> to spawn parallel instances of GeminiCLI in separate, visible panes.
+              </p>
+              <ul class="cyber-list" style="font-size: 0.75rem;">
+                <li><strong>Skill-Spawned Panes:</strong> Subagent dispatches run inside dedicated visual panels.</li>
+                <li><strong>Easier Monitoring:</strong> Watch concurrent frontend, backend, and ADK builds side-by-side.</li>
+                <li><strong>Spectator Mode:</strong> Turn background code generation into a stimulating live-build sport for the audience.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- SLIDE 10: Gemini 3.5 Flash: The Secret Weapon -->
+        <section data-transition="zoom">
+          <h2>The Secret Weapon: Gemini 3.5 Flash</h2>
+          <div class="cyber-card active" style="margin-top: 20px;">
+            <div class="slanted-badge">Ridiculous Build Speed</div>
+            <p style="font-size: 1.15rem; margin-bottom: 25px; line-height: 1.6; color: var(--color-text-main);">
+              I was incredibly lucky to leverage the brand-new <strong class="highlight">Gemini 3.5 Flash</strong>, which was announced just the day before the event. In a 40-minute live build under pressure, model speed is everything.
+            </p>
+            <ul class="cyber-list" style="font-size: 1.05rem;">
+              <li style="margin-bottom: 20px; line-height: 1.5;"><strong>Near-Zero Latency:</strong> Ridiculously fast time-to-first-token kept my parallel TMUX agent swarm running with zero lag.</li>
+              <li style="margin-bottom: 20px; line-height: 1.5;"><strong>Continuous Telemetry Flow:</strong> Ensured that live logs streamed into the spectator dashboard seamlessly without sluggish interruptions.</li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- SLIDE 11: Lessons Learned -->
+        <section data-transition="convex">
+          <h2>Lessons Learned</h2>
+          <div class="grid-2">
+            <div class="cyber-card active">
+              <h3 style="font-size: 1.2rem; color: var(--color-accent); margin-bottom: 10px !important;">Speed, Control & Spectator Value</h3>
+              <p style="font-size: 0.85rem; line-height: 1.4; color: var(--color-text-main); margin-bottom: 10px;">
+                <strong>Terminal & Multiplexing Advantage:</strong> Working in the terminal with <code>GeminiCLI</code> and <code>TMUX</code> gave me ultimate control. Running parallel agent instances in spawned TMUX panes kept the build blazing fast and visually engaging for the audience.
+              </p>
+              <p style="font-size: 0.85rem; line-height: 1.4; color: var(--color-text-dim);">
+                <strong>Zero-Cloud, Data-First Simplicity:</strong> Keeping state in local JSON files (<code>data.json</code>) and using CORS-enabled local FastAPI endpoints avoided cloud DB bottlenecks and network friction entirely.
+              </p>
+            </div>
+            <div class="cyber-card">
+              <h3 style="font-size: 1.2rem; color: var(--color-accent); margin-bottom: 10px !important;">What I Would Do Differently</h3>
+              <p style="font-size: 0.85rem; line-height: 1.4; color: var(--color-text-main); margin-bottom: 10px;">
+                <strong>Optimizing the 40-Minute Sprint:</strong>
+              </p>
+              <ul class="cyber-list" style="font-size: 0.75rem;">
+                <li><strong>Robust Frontend Skills:</strong> Build more comprehensive code-generation skills (like <a href="https://github.com/sapientcoffee/vibe-games/tree/main/skills/build-ui" target="_blank" style="color: var(--color-accent); text-decoration: underline;">build-ui</a>) to auto-scaffold complex UI layouts instead of coding React dashboards on the fly.</li>
+                <li><strong>User Experience Priority:</strong> Dedicate more clock-time to polishing frontend design, as setting up the ADK multi-agent backend is already streamlined.</li>
+                <li><strong>Auto-Generated Decks:</strong> Create a custom skill (like <a href="https://github.com/sapientcoffee/vibe-games/tree/main/skills/walkthrough" target="_blank" style="color: var(--color-accent); text-decoration: underline;">walkthrough</a>) to auto-compile presentation slides from project blueprints, reducing the hectic stress of manual slide creation.</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- SLIDE 12: Demo Console -->
+        <section data-transition="zoom" class="slide-layout-center">
+          <div class="slanted-badge" style="font-size: 1.1rem; padding: 6px 20px;">VIBE CHECK COMPLETE</div>
+          <h1 class="glow-text" style="font-size: 3.5rem !important; margin-bottom: 10px !important;">Ready to <span class="highlight">Launch</span>?</h1>
+          <p style="max-width: 600px; margin-bottom: 40px; font-size: 1.1rem;">
+            The complete ClassVibe AI codebase, custom ADK agentic schemas, and CLI extension skills are fully open-sourced on GitHub.
+          </p>
+          <div style="display: flex; gap: 20px; justify-content: center;">
+            <a href="https://github.com/sapientcoffee/vibe-games" target="_blank" class="btn-cyber">View Repo Source</a>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
+    <!-- Reveal.js Library and Plugins -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.js"></script>
+    <script>
+      Reveal.initialize({
+        hash: true,
+        controls: true,
+        progress: true,
+        center: false, // Turn off center to support my clean left-aligned cyber templates
+        transition: 'slide', // none/fade/slide/convex/concave/zoom
+        backgroundTransition: 'fade'
+      });
+    </script>
+  </body>
+</html>

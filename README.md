@@ -6,6 +6,16 @@ This extension abandons traditional, bloated software development lifecycles in 
 
 ---
 
+## 📺 Interactive Showcase & Slide Deck
+
+The project includes a stunning, local-first interactive presentation showcasing the development process, architecture, and live demo trace of **ClassVibe AI**.
+
+👉 **[Launch the Reveal.js Presentation (index.html)](./index.html)** *(Simply open `index.html` in your browser to view)*
+
+![Vibe Games Presentation Theme](assets/screenshot-theme.png)
+
+---
+
 ## 🏎️ The Winning Playbook: The Hacker Vibe Pipeline
 
 In a 40-minute live sprint, context switching is fatal. This pipeline replaces interactive manual scaffolding with a straight-line, data-first execution path starting with pre-flight automated ideation.
