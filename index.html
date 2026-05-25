@@ -414,8 +414,8 @@
             <div class="pipeline-step">
               <div class="pipeline-step-num">04</div>
               <div class="pipeline-step-details">
-                <h4><a href="https://github.com/sapientcoffee/vibe-games/tree/main/skills/send-it" target="_blank" style="color: var(--color-accent); text-decoration: underline;">/send-it</a> — Parallel TMUX Dispatching</h4>
-                <p>Programmatically spawns parallel, isolated subagents inside separate, visible TMUX panes. Each subagent focuses 100% on implementing its design slice with zero lateral distractions.</p>
+                <h4><a href="https://github.com/sapientcoffee/vibe-games/tree/main/skills/send-it" target="_blank" style="color: var(--color-accent); text-decoration: underline;">/send-it</a> — Parallel TMUX Dispatching & Live Kanban</h4>
+                <p>Spawns subagents in isolated, visible TMUX panes. A background watcher compiles individual status files in real-time, safely updating a live Mermaid Kanban board for the audience to track progress.</p>
               </div>
             </div>
           </div>
@@ -569,6 +569,40 @@
           <p style="font-size: 0.85rem; margin-top: 15px; color: var(--color-text-dim);">
             Each state mutation outputs real-time feedback with unbuffered stdout logs (`flush=True`) for instant audience tracking.
           </p>
+        </section>
+
+        <!-- SLIDE 8.5: Live Spectator Kanban Board (State Directory Pattern) -->
+        <section data-transition="slide">
+          <h2>The Live Kanban Tracker</h2>
+          <p style="font-size: 0.95rem; margin-bottom: 25px;">
+            To turn background code generation into a stimulating live sport, the main pane displays a <strong>real-time Mermaid Kanban board</strong>, enabling the audience to follow the progress of parallel subagents.
+          </p>
+          <div class="grid-2">
+            <div class="cyber-card active" style="height: 100%;">
+              <div class="slanted-badge">Real-Time Visualization</div>
+              <h3 style="font-size: 1.3rem; margin-bottom: 15px !important; color: var(--color-accent);">Spectator Clarity</h3>
+              <p style="font-size: 0.85rem; color: var(--color-text-main); margin-bottom: 10px;">
+                As specialized parallel subagents (<code>vibe-ui-artist</code>, <code>vibe-adk-hacker</code>) work on their design slices, tasks automatically move from <strong>To Do</strong> ➡️ <strong>In Progress</strong> ➡️ <strong>Done</strong> on the big screen.
+              </p>
+              <ul class="cyber-list" style="font-size: 0.75rem;">
+                <li><strong>Single Focal Point:</strong> The audience immediately grasps the project state.</li>
+                <li><strong>High Engagement:</strong> Turns standard silent compilation into a live race.</li>
+                <li><strong>Instant Feedback:</strong> Clear stage-by-stage success visualizers.</li>
+              </ul>
+            </div>
+            <div class="cyber-card" style="height: 100%;">
+              <div class="slanted-badge">The State Directory Pattern</div>
+              <h3 style="font-size: 1.3rem; margin-bottom: 15px !important; color: var(--color-accent);">Preventing File Collisions</h3>
+              <p style="font-size: 0.85rem; color: var(--color-text-main); margin-bottom: 10px;">
+                Writing to a single shared Kanban file concurrently would cause race conditions and file corruption.
+              </p>
+              <ul class="cyber-list" style="font-size: 0.75rem;">
+                <li><strong>Isolated States:</strong> Each subagent writes its current status exclusively to an isolated <code>.plans/swarm-state/&lt;issue&gt;.state</code> file.</li>
+                <li><strong>Auto-Aggregating Watcher:</strong> A background daemon (<code>watch-kanban.sh</code>) monitors the state directory every 2 seconds.</li>
+                <li><strong>Safe Rebuilds:</strong> Safely reconstructs the unified Mermaid diagram without file conflicts.</li>
+              </ul>
+            </div>
+          </div>
         </section>
 
         <!-- SLIDE 9: Why GeminiCLI (Terminal-First & Multiplexing Swarms) -->
