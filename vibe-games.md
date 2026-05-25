@@ -15,10 +15,11 @@ This extension provides a ruthless, high-speed pipeline of specialized commands,
 ---
 
 ## 🛠️ The Hacker Vibe Pipeline
-The standard software development lifecycle has been compressed into four lightning-fast terminal commands. 
+The standard software development lifecycle has been compressed into a pre-flight automated ideation skill and four lightning-fast terminal commands. 
 
-| Command | Role | Output |
+| Command / Skill | Role | Output |
 | :--- | :--- | :--- |
+| **`ideator` (Skill)** | **Pre-Flight Discovery** | Dynamically researches domain friction, designs target personas, aligns ADK topologies, and drafts `CONTEXT_DRAFT.md`. |
 | **`/vibe-check`** | **Scope Definition** | 3 rapid-fire Yes/No questions to lock in the use case. Initializes the tracker. |
 | **`/blueprint`** | **Technical Skeleton** | Generates the ADK prompts, defines Deep Modules, and seeds the initial `data.json` payload. |
 | **`/chop-shop`** | **Task Slicing** | Breaks the blueprint into parallel `[FRONTEND]`, `[BACKEND]`, and `[ADK-INIT]` slices. |
