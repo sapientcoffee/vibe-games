@@ -1,5 +1,7 @@
 # 🚀 Vibe Games Gemini CLI Extension (Hacker Vibe Edition)
 
+![Vibe Games Team](assets/vibe-games-all.jpeg)
+
 A ruthless, high-velocity extension for the Gemini CLI, specifically optimized for building, validating, and demoing agentic prototypes in under 40 minutes for the **Vibe Games Competition**.
 
 This extension abandons traditional, bloated software development lifecycles in favor of a deterministic, 5-step terminal pipeline that launches a visually stunning `tmux` swarm of AI subagents.
@@ -12,7 +14,7 @@ The project includes a stunning, local-first interactive presentation showcasing
 
 👉 **[Launch the Live Presentation](https://sapientcoffee.github.io/vibe-games/)** *(Or open [index.html](./index.html) locally)*
 
-![Vibe Games Presentation Theme](assets/screenshot-theme.png)
+![Vibe Games Player Card - Rob](assets/vibe-games-rob.jpeg)
 
 ---
 
